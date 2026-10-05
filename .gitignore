@@ -1,0 +1,45 @@
+# Large archives and packages
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+fls-school-docker.zip
+fls-school-images.tar.gz
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+fls-backend/.env
+fls-admin/.env.local
+
+# Dependency directories
+node_modules/
+*/node_modules/
+
+# Production build outputs
+dist/
+*/dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+
+# Docker & Database volumes
+mongo_data/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

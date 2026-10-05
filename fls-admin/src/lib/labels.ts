@@ -52,6 +52,30 @@ export const ACTIVITY_MAP: Record<string, ActivityStyle> = {
     bg: '#F1F5F9',
     iconColor: '#64748B',
   },
+  STUDENT_PREREGISTERED: {
+    title: 'Pré-inscription en ligne',
+    icon: UserPlus,
+    bg: '#FEF3C7',
+    iconColor: '#D97706',
+  },
+  TESTIMONIAL_SUBMITTED: {
+    title: 'Nouvel avis déposé',
+    icon: Activity,
+    bg: '#FEF3C7',
+    iconColor: '#D97706',
+  },
+  TESTIMONIAL_APPROVED: {
+    title: 'Avis approuvé',
+    icon: Activity,
+    bg: '#DCFCE7',
+    iconColor: '#16A34A',
+  },
+  TESTIMONIAL_REJECTED: {
+    title: 'Avis refusé',
+    icon: Activity,
+    bg: '#FEE2E2',
+    iconColor: '#DC2626',
+  },
 };
 
 export function getActivityConfig(type: string, fallbackTitle: string): ActivityStyle {

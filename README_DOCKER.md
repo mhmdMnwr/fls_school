@@ -19,15 +19,17 @@ Cela produit directement le fichier `fls-school-docker.zip` (~480 Ko) prêt à �
 
 ### Étapes de démarrage (pour vous ou votre ami)
 
-1. Ouvrez un terminal dans la racine du projet (`tm_school`) :
-   ```bash
-   cd tm_school
-   ```
+1. Décompressez l'archive `fls-school-docker.zip` et ouvrez le dossier.
 
-2. Construisez et lancez les conteneurs :
-   ```bash
-   docker compose up --build -d
-   ```
+2. Lancez l'application en une seule commande :
+   - **Sous Linux / Mac** :
+     ```bash
+     ./start.sh
+     ```
+   - **Sous Windows** :
+     Double-cliquez sur `start.bat` (ou lancez `docker compose up --build -d` dans un terminal).
+
+   *(Ou manuellement dans un terminal : `docker compose up --build -d`)*
 
 3. Accédez à l'application dans votre navigateur :
    - **Frontend (Application Web)** : [http://localhost:5173](http://localhost:5173)

@@ -118,6 +118,25 @@ export interface ParentPaymentsResponse {
   payments: ParentPaymentItem[];
 }
 
+export interface ParentTestimonial {
+  id: string;
+  student: string;
+  authorName: string;
+  rating: number;
+  message: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  reviewedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateParentTestimonialInput {
+  parentName?: string;
+  rating: number;
+  message: string;
+  consent: boolean;
+}
+
 export const parentPortalApi = {
   login: async (
     username: string,
@@ -159,4 +178,22 @@ export const parentPortalApi = {
     );
     return res.data;
   },
+
+  submitTestimonial: async (
+    data: CreateParentTestimonialInput,
+  ): Promise<ParentTestimonial> => {
+    const res = await parentClient.post<ParentTestimonial>(
+      '/parent/testimonials',
+      data,
+    );
+    return res.data;
+  },
+
+  getMyTestimonials: async (): Promise<ParentTestimonial[]> => {
+    const res = await parentClient.get<ParentTestimonial[]>(
+      '/parent/testimonials',
+    );
+    return res.data;
+  },
 };
+

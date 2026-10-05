@@ -121,7 +121,7 @@ export const PaymentFormDialog: React.FC<PaymentFormDialogProps> = ({
         reset({
           studentId: initialStudentId || '',
           paidOn: todayStr,
-          amount: 0,
+          amount: '' as any,
           description: '',
         });
       }
@@ -248,7 +248,7 @@ export const PaymentFormDialog: React.FC<PaymentFormDialogProps> = ({
             helperText={`${descriptionCharCount} / 255 caractères`}
           >
             <Textarea
-              placeholder="ex. Frais d'inscription 1er trimestre..."
+              placeholder="Description du paiement"
               rows={3}
               maxLength={255}
               className="rounded-xl resize-none text-sm"

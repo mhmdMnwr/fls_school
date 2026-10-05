@@ -28,6 +28,7 @@ export class StudentsController {
       classId: query.classId,
       levelId: query.levelId,
       isActive: query.isActive,
+      origin: query.origin,
       page: query.page,
       limit: query.limit,
     });

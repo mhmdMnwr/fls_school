@@ -24,6 +24,10 @@ if [ "$MODE" = "1" ] || [ "$MODE" = "3" ]; then
   zip -r "$ZIP_NAME" \
     docker-compose.yml \
     README_DOCKER.md \
+    start.sh \
+    start.bat \
+    stop.sh \
+    stop.bat \
     fls-backend/ \
     fls-admin/ \
     -x "*/node_modules/*" \

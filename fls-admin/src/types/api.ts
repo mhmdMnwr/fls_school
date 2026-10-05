@@ -100,9 +100,11 @@ export interface Student {
   firstName: string;
   lastName: string;
   birthDate: string;
+  gender?: 'MALE' | 'FEMALE';
+  origin?: 'ADMIN' | 'WEBSITE';
   phone?: string;
   email?: string;
-  schoolClass?: SchoolClass;
+  schoolClass?: SchoolClass | null;
   groupsCount?: number;
   isActive: boolean;
   createdAt?: string;
@@ -202,6 +204,7 @@ export interface DashboardStats {
   levels: { total: number };
   subjects: { total: number };
   teachers: { total: number };
+  preRegistrations?: number;
 }
 
 export interface EnrollmentEvolution {
@@ -219,10 +222,64 @@ export interface StudentsByLevel {
 export interface RecentStudent {
   id: Id;
   fullName: string;
-  className: string;
-  levelName: string;
+  className: string | null;
+  levelName: string | null;
   createdAt: string;
   isActive: boolean;
+  origin?: 'ADMIN' | 'WEBSITE';
+}
+
+export interface Testimonial {
+  id: Id;
+  student?: {
+    id: Id;
+    firstName: string;
+    lastName: string;
+    schoolClass?: {
+      id: Id;
+      name: string;
+    } | null;
+  } | null;
+  authorName: string;
+  rating: number;
+  message: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  reviewedAt?: string;
+  createdAt: string;
+}
+
+export interface TestimonialCounts {
+  pending: number;
+  approved: number;
+  rejected: number;
+  total: number;
+}
+
+export interface SiteSettings {
+  key?: string;
+  heroTagline?: string;
+  heroDescription?: string;
+  tagline?: string;
+  aboutTitle?: string;
+  aboutText1?: string;
+  aboutText2?: string;
+  address?: string;
+  googleMapsEmbedUrl?: string;
+  mapsEmbedUrl?: string;
+  mapsUrl?: string;
+  phone?: string;
+  whatsapp?: string;
+  email?: string;
+  scheduleWeekdays?: string;
+  scheduleSaturday?: string;
+  scheduleSunday?: string;
+  openingHours?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  linkedinUrl?: string;
+  youtubeUrl?: string;
+  tiktokUrl?: string;
+  socialLinks?: { name: string; url: string }[];
 }
 
 // Helper to safely get relation object or fallback

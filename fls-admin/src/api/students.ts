@@ -6,6 +6,7 @@ export interface GetStudentsParams {
   classId?: string;
   levelId?: string;
   isActive?: boolean | string;
+  origin?: 'ADMIN' | 'WEBSITE';
   page?: number;
   limit?: number;
 }
@@ -14,6 +15,8 @@ export interface CreateStudentInput {
   firstName: string;
   lastName: string;
   birthDate: string;
+  gender: 'MALE' | 'FEMALE';
+  schoolClassId?: string | null;
   phone?: string;
   email?: string;
   isActive?: boolean;

@@ -20,12 +20,16 @@ export default function ParentLayout() {
       <header className="sticky top-0 z-30 bg-gradient-to-r from-[#312E81] to-[#4338CA] text-white shadow-md">
         <div className="max-w-5xl mx-auto px-4 md:px-6 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xs flex items-center justify-center border border-white/15">
-              <GraduationCap className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md p-1 border border-white/20">
+              <img
+                src="/images/fls-logo.png"
+                alt="FLS School Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
-              <div className="font-bold text-base leading-tight tracking-tight">FLS School</div>
-              <div className="text-xs text-white/70 font-medium">Espace Parent</div>
+              <div className="font-black text-base leading-tight tracking-tight text-white">FLS School</div>
+              <div className="text-xs text-white/85 font-bold">Espace Parent</div>
             </div>
           </div>
 

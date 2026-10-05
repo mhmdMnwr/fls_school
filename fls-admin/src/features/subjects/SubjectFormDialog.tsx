@@ -241,7 +241,7 @@ export const SubjectFormDialog: React.FC<SubjectFormDialogProps> = ({
           {/* Subject Name */}
           <FormField label="Nom de la matière" required error={errors.name?.message}>
             <Input
-              placeholder="ex. Mathématiques"
+              placeholder="Nom de la matière"
               className="h-10 rounded-xl"
               {...register('name')}
             />

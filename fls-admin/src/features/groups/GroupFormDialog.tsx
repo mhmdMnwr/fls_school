@@ -195,7 +195,7 @@ export const GroupFormDialog: React.FC<GroupFormDialogProps> = ({
           })),
         });
       } else {
-        const initialCls = defaultClassId || (allClasses[0]?.id ?? '');
+        const initialCls = defaultClassId || '';
         setSelectedClassId(initialCls);
         reset({
           schoolClassId: initialCls,
@@ -203,11 +203,11 @@ export const GroupFormDialog: React.FC<GroupFormDialogProps> = ({
           teacherId: '',
           name: '',
           isActive: true,
-          studyTime: [{ weekday: 'samedi', startTime: '08:00', endTime: '10:00' }],
+          studyTime: [],
         });
       }
     }
-  }, [open, initialData, defaultClassId, defaultSubjectId, allClasses, reset]);
+  }, [open, initialData, defaultClassId, defaultSubjectId, reset]);
 
   const mutation = useMutation({
     mutationFn: async (values: GroupFormValues) => {
@@ -389,7 +389,7 @@ export const GroupFormDialog: React.FC<GroupFormDialogProps> = ({
             helperText="Permet de distinguer plusieurs groupes de la même matière"
           >
             <Input
-              placeholder="ex. Samedi 10:00"
+              placeholder="Nom du groupe"
               className="h-10 rounded-xl"
               {...register('name')}
             />

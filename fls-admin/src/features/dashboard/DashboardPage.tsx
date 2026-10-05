@@ -10,6 +10,7 @@ import { QuickActions } from './widgets/QuickActions';
 import { RecentStudentsTable } from './widgets/RecentStudentsTable';
 import { UpcomingSessionsList } from './widgets/UpcomingSessionsList';
 import { RecentActivitiesList } from './widgets/RecentActivitiesList';
+import { TestimonialsWidget } from './widgets/TestimonialsWidget';
 
 export default function DashboardPage() {
   useEffect(() => {
@@ -71,6 +72,11 @@ export default function DashboardPage() {
         <div className="lg:col-span-3 min-h-[340px]">
           <RecentActivitiesList />
         </div>
+      </div>
+
+      {/* Row 4: Testimonials Widget */}
+      <div>
+        <TestimonialsWidget />
       </div>
     </div>
   );

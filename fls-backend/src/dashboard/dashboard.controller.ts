@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service.js';
+import { TestimonialsService } from '../testimonials/testimonials.service.js';
 import {
   EnrollmentEvolutionQueryDto,
   LimitQueryDto,
@@ -10,7 +11,10 @@ import {
 @ApiBearerAuth()
 @Controller('dashboard')
 export class DashboardController {
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private testimonialsService: TestimonialsService,
+  ) {}
 
   @Get('stats')
   getStats() {
@@ -40,5 +44,10 @@ export class DashboardController {
   @Get('recent-activities')
   getRecentActivities(@Query() query: LimitQueryDto) {
     return this.dashboardService.getRecentActivities(query.limit ?? 5);
+  }
+
+  @Get('testimonials')
+  getTestimonials(@Query() query: LimitQueryDto) {
+    return this.testimonialsService.getDashboardTestimonials(query.limit ?? 3);
   }
 }

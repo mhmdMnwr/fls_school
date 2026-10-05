@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import {
   LayoutDashboard,
   Users,
@@ -9,12 +10,16 @@ import {
   UsersRound,
   CalendarDays,
   Wallet,
+  MessageSquare,
   Settings,
   X,
+  Globe,
+  ExternalLink,
   LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { APP_NAME, APP_SUBTITLE, TAGLINE } from '@/config/brand';
+import { testimonialsApi } from '@/api/testimonials';
 
 interface NavItem {
   label: string;
@@ -24,7 +29,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Tableau de bord', to: '/', icon: LayoutDashboard, exact: true },
+  { label: 'Tableau de bord', to: '/dashboard', icon: LayoutDashboard, exact: true },
   { label: 'Élèves', to: '/eleves', icon: Users },
   { label: 'Niveaux', to: '/niveaux', icon: Layers },
   { label: 'Matières', to: '/matieres', icon: BookOpen },
@@ -32,6 +37,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Groupes', to: '/groupes', icon: UsersRound },
   { label: 'Séances', to: '/seances', icon: CalendarDays },
   { label: 'Paiements', to: '/paiements', icon: Wallet },
+  { label: 'Avis', to: '/avis', icon: MessageSquare },
 ];
 
 export interface SidebarProps {
@@ -46,6 +52,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   className,
 }) => {
   const location = useLocation();
+
+  const { data: counts } = useQuery({
+    queryKey: ['testimonials', 'counts'],
+    queryFn: testimonialsApi.getCounts,
+    refetchInterval: 30_000,
+  });
 
   // Close on route change
   React.useEffect(() => {
@@ -78,14 +90,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div>
         <div className="flex items-center justify-between mb-6 px-1">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-xs flex items-center justify-center shrink-0 border border-white/10">
-              <GraduationCap className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm border border-white/20 overflow-hidden p-0.5">
+              <img
+                src="/images/fls-logo.png"
+                alt="FLS School Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
-              <div className="text-xl font-bold text-white tracking-tight leading-tight">
+              <div className="text-xl font-black text-white tracking-tight leading-tight">
                 {APP_NAME}
               </div>
-              <div className="text-xs text-white/70 font-medium">
+              <div className="text-xs text-white/80 font-bold">
                 {APP_SUBTITLE}
               </div>
             </div>
@@ -106,20 +122,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {NAV_ITEMS.map((item) => {
             const active = isItemActive(item);
             const Icon = item.icon;
+            const isAvis = item.to === '/avis';
+            const pendingCount = isAvis ? counts?.pending ?? 0 : 0;
+
             return (
               <NavLink
                 key={item.to}
                 to={item.to}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'flex items-center gap-3 h-11 px-4 rounded-xl text-sm font-medium transition-all duration-150',
+                  'flex items-center gap-3 h-11 px-4 rounded-xl text-sm font-bold tracking-wide transition-all duration-150',
                   active
-                    ? 'bg-gradient-to-r from-sidebar-active-from to-sidebar-active-to text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18),0_8px_24px_rgba(91,75,245,0.45)]'
-                    : 'text-white/85 hover:text-white hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-sidebar-active-from to-sidebar-active-to text-white font-extrabold shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18),0_8px_24px_rgba(91,75,245,0.45)]'
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
                 )}
               >
-                <Icon size={20} strokeWidth={1.75} className="shrink-0" />
-                <span>{item.label}</span>
+                <Icon size={20} strokeWidth={2} className="shrink-0" />
+                <span className="flex-1 text-left">{item.label}</span>
+                {pendingCount > 0 && (
+                  <span className="px-2 py-0.5 text-xs font-black rounded-full bg-amber-500 text-white shadow-xs">
+                    {pendingCount}
+                  </span>
+                )}
               </NavLink>
             );
           })}
@@ -132,24 +156,41 @@ export const Sidebar: React.FC<SidebarProps> = ({
             to="/parametres"
             aria-current={location.pathname === '/parametres' ? 'page' : undefined}
             className={cn(
-              'flex items-center gap-3 h-11 px-4 rounded-xl text-sm font-medium transition-all duration-150',
+              'flex items-center gap-3 h-11 px-4 rounded-xl text-sm font-bold tracking-wide transition-all duration-150',
               location.pathname === '/parametres'
-                ? 'bg-gradient-to-r from-sidebar-active-from to-sidebar-active-to text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18),0_8px_24px_rgba(91,75,245,0.45)]'
-                : 'text-white/85 hover:text-white hover:bg-white/10'
+                ? 'bg-gradient-to-r from-sidebar-active-from to-sidebar-active-to text-white font-extrabold shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18),0_8px_24px_rgba(91,75,245,0.45)]'
+                : 'text-white/90 hover:text-white hover:bg-white/10'
             )}
           >
-            <Settings size={20} strokeWidth={1.75} className="shrink-0" />
+            <Settings size={20} strokeWidth={2} className="shrink-0" />
             <span>Paramètres</span>
           </NavLink>
+
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 h-10 px-4 rounded-xl text-xs font-bold text-white/85 hover:text-white hover:bg-white/10 transition-colors mt-1"
+          >
+            <Globe size={18} strokeWidth={2} className="shrink-0 text-amber-400" />
+            <span>Voir le site public</span>
+            <ExternalLink size={13} className="ml-auto opacity-75" />
+          </a>
         </nav>
       </div>
 
       {/* Bottom block */}
       <div className="pt-6 pb-2 text-center border-t border-white/10">
         <div className="flex justify-center mb-2">
-          <GraduationCap className="w-7 h-7 text-white/70" />
+          <div className="w-9 h-9 rounded-full bg-white p-0.5 shadow-sm overflow-hidden flex items-center justify-center">
+            <img
+              src="/images/fls-logo.png"
+              alt="FLS School Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
         </div>
-        <p className="text-sm italic text-white/70 leading-snug px-2">
+        <p className="text-sm italic text-white/80 font-medium leading-snug px-2">
           « {TAGLINE} »
         </p>
       </div>

@@ -11,15 +11,23 @@ interface StatsRowProps {
 export const StatsRow: React.FC<StatsRowProps> = ({ stats, isLoading = false }) => {
   const newThisMonth = stats?.students?.newThisMonth ?? 0;
 
-  const studentsSubline =
-    newThisMonth > 0 ? (
-      <span className="inline-flex items-center gap-0.5 text-emerald-600 font-semibold">
-        <ArrowUp className="w-3.5 h-3.5" />
-        <span>+{newThisMonth} ce mois</span>
-      </span>
-    ) : (
-      <span className="text-muted">Aucune nouvelle inscription ce mois</span>
-    );
+  const studentsSubline = (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {newThisMonth > 0 ? (
+        <span className="inline-flex items-center gap-0.5 text-emerald-600 font-semibold">
+          <ArrowUp className="w-3.5 h-3.5" />
+          <span>+{newThisMonth} ce mois</span>
+        </span>
+      ) : (
+        <span className="text-muted">0 nouvelle inscription</span>
+      )}
+      {(stats?.preRegistrations ?? 0) > 0 && (
+        <span className="text-amber-600 font-semibold">
+          • {stats?.preRegistrations} pré-inscrit(s)
+        </span>
+      )}
+    </div>
+  );
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">

@@ -152,7 +152,7 @@ export const TeacherFormDialog: React.FC<TeacherFormDialogProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Prénom" required error={errors.firstName?.message}>
               <Input
-                placeholder="ex. Karim"
+                placeholder="Prénom"
                 className="h-10 rounded-xl"
                 {...register('firstName')}
               />
@@ -160,7 +160,7 @@ export const TeacherFormDialog: React.FC<TeacherFormDialogProps> = ({
 
             <FormField label="Nom" required error={errors.lastName?.message}>
               <Input
-                placeholder="ex. Mansouri"
+                placeholder="Nom"
                 className="h-10 rounded-xl"
                 {...register('lastName')}
               />
@@ -170,7 +170,7 @@ export const TeacherFormDialog: React.FC<TeacherFormDialogProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Téléphone" error={errors.phone?.message}>
               <Input
-                placeholder="0555 12 34 56"
+                placeholder="Téléphone"
                 className="h-10 rounded-xl"
                 {...register('phone')}
               />
@@ -179,7 +179,7 @@ export const TeacherFormDialog: React.FC<TeacherFormDialogProps> = ({
             <FormField label="Email" error={errors.email?.message}>
               <Input
                 type="email"
-                placeholder="prof@fls.school"
+                placeholder="Email"
                 className="h-10 rounded-xl"
                 {...register('email')}
               />

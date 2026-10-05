@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useMutation } from '@tanstack/react-query';
-import { Lock, Eye, EyeOff, LogOut, Loader2, ShieldCheck, User } from 'lucide-react';
+import { Lock, Eye, EyeOff, LogOut, Loader2, ShieldCheck, User, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 import { authApi } from '@/api/auth';
 import { useAuth } from '@/hooks/useAuth';
@@ -12,6 +12,8 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import SiteSettingsTab from './SiteSettingsTab';
 
 const passwordSchema = z
   .object({
@@ -28,6 +30,7 @@ type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export default function SettingsPage() {
   const { admin, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState('account');
 
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -74,10 +77,29 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Paramètres"
-        subtitle="Gérez votre compte et vos options de sécurité"
+        subtitle="Gérez votre compte administrateur et les options du site public"
       />
 
-      <div className="max-w-[640px] space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="bg-slate-100 p-1 rounded-xl">
+          <TabsTrigger
+            value="account"
+            className="rounded-lg text-xs font-semibold px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-ink data-[state=active]:shadow-xs flex items-center gap-2"
+          >
+            <ShieldCheck className="w-4 h-4" />
+            <span>Compte & Sécurité</span>
+          </TabsTrigger>
+          <TabsTrigger
+            value="site"
+            className="rounded-lg text-xs font-semibold px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-ink data-[state=active]:shadow-xs flex items-center gap-2"
+          >
+            <Globe className="w-4 h-4" />
+            <span>Site web</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Tab 1: Compte & Sécurité */}
+        <TabsContent value="account" className="space-y-6 max-w-[640px] mt-0">
         {/* Card 1: Profil */}
         <div className="bg-white rounded-2xl border border-line/60 p-6 shadow-xs space-y-5">
           <div className="flex items-center gap-2">
@@ -236,7 +258,13 @@ export default function SettingsPage() {
             Se déconnecter
           </Button>
         </div>
-      </div>
+        </TabsContent>
+
+        {/* Tab 2: Site web */}
+        <TabsContent value="site" className="mt-0 max-w-[800px]">
+          <SiteSettingsTab />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

@@ -117,7 +117,7 @@ export const LevelFormDialog: React.FC<LevelFormDialogProps> = ({
             error={errors.name?.message}
           >
             <Input
-              placeholder="ex. Secondaire"
+              placeholder="Nom du niveau"
               className="h-10 rounded-xl"
               {...register('name')}
             />

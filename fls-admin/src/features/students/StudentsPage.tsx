@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { Users, MoreHorizontal, Eye, Pencil, Trash2, KeyRound } from 'lucide-react';
+import { Users, MoreHorizontal, Eye, Pencil, Trash2, KeyRound, Check } from 'lucide-react';
 import { studentsApi } from '@/api/students';
 import { levelsApi } from '@/api/levels';
 import { classesApi } from '@/api/classes';
@@ -35,6 +35,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import StudentFormDialog from './StudentFormDialog';
+import ValidateRegistrationDialog from './ValidateRegistrationDialog';
 import ParentAccountDialog from './ParentAccountDialog';
 
 export default function StudentsPage() {
@@ -54,10 +55,11 @@ export default function StudentsPage() {
     setFilters,
     resetFilters,
     hasActiveFilters,
-  } = useListParams<{ levelId: string; classId: string; isActive: string }>();
+  } = useListParams<{ levelId: string; classId: string; isActive: string; origin: string }>();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [validateStudent, setValidateStudent] = useState<Student | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Student | null>(null);
   const [parentAccountStudent, setParentAccountStudent] = useState<Student | null>(null);
 
@@ -92,6 +94,7 @@ export default function StudentsPage() {
   const levelIdFilter = filters.levelId || 'all';
   const classIdFilter = filters.classId || 'all';
   const isActiveFilter = filters.isActive || 'all';
+  const originFilter = filters.origin || 'all';
 
   const filterableClasses = useMemo(() => {
     if (levelIdFilter === 'all') return allClasses;
@@ -122,6 +125,7 @@ export default function StudentsPage() {
         levelId: levelIdFilter,
         classId: classIdFilter,
         isActive: isActiveFilter,
+        origin: originFilter,
       },
     ],
     queryFn: () =>
@@ -132,6 +136,7 @@ export default function StudentsPage() {
         levelId: levelIdFilter === 'all' ? undefined : levelIdFilter,
         classId: classIdFilter === 'all' ? undefined : classIdFilter,
         isActive: isActiveFilter === 'all' ? undefined : isActiveFilter,
+        origin: originFilter === 'all' ? undefined : (originFilter as 'ADMIN' | 'WEBSITE'),
       }),
     placeholderData: keepPreviousData,
   });
@@ -177,6 +182,15 @@ export default function StudentsPage() {
       ),
     },
     {
+      key: 'schoolClass',
+      header: 'Classe',
+      render: (row) => (
+        <span className="text-xs font-medium text-ink">
+          {row.schoolClass?.name || '—'}
+        </span>
+      ),
+    },
+    {
       key: 'groupsCount',
       header: 'Groupes',
       render: (row) => (
@@ -200,11 +214,16 @@ export default function StudentsPage() {
     {
       key: 'isActive',
       header: 'Statut',
-      render: (row) => (
-        <StatusBadge variant={row.isActive ? 'success' : 'neutral'}>
-          {row.isActive ? 'Actif' : 'Inactif'}
-        </StatusBadge>
-      ),
+      render: (row) =>
+        row.origin === 'WEBSITE' && !row.isActive ? (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+            Pré-inscrit
+          </span>
+        ) : (
+          <StatusBadge variant={row.isActive ? 'success' : 'neutral'}>
+            {row.isActive ? 'Actif' : 'Inactif'}
+          </StatusBadge>
+        ),
     },
     {
       key: 'actions',
@@ -222,7 +241,7 @@ export default function StudentsPage() {
               <MoreHorizontal className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40 rounded-xl p-1 shadow-md bg-white">
+          <DropdownMenuContent align="end" className="w-48 rounded-xl p-1 shadow-md bg-white">
             <DropdownMenuItem
               onClick={() => navigate(`/eleves/${row.id}`)}
               className="rounded-lg text-xs py-2 cursor-pointer hover:bg-brand-50"
@@ -230,6 +249,15 @@ export default function StudentsPage() {
               <Eye className="w-3.5 h-3.5 mr-2 text-muted" />
               Voir
             </DropdownMenuItem>
+            {row.origin === 'WEBSITE' && !row.isActive && (
+              <DropdownMenuItem
+                onClick={() => setValidateStudent(row)}
+                className="rounded-lg text-xs py-2 cursor-pointer hover:bg-amber-50 text-amber-700 font-semibold"
+              >
+                <Check className="w-3.5 h-3.5 mr-2 text-amber-600" />
+                Valider l'inscription
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               onClick={() => setParentAccountStudent(row)}
               className="rounded-lg text-xs py-2 cursor-pointer hover:bg-brand-50 text-[#4338CA]"
@@ -324,13 +352,28 @@ export default function StudentsPage() {
           value={isActiveFilter}
           onValueChange={(val) => setFilter('isActive', val)}
         >
-          <SelectTrigger className="w-full sm:w-[180px] h-10 rounded-xl bg-white border-line text-sm">
+          <SelectTrigger className="w-full sm:w-[160px] h-10 rounded-xl bg-white border-line text-sm">
             <SelectValue placeholder="Tous les statuts" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tous les statuts</SelectItem>
             <SelectItem value="true">Actif</SelectItem>
             <SelectItem value="false">Inactif</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Origine Select */}
+        <Select
+          value={originFilter}
+          onValueChange={(val) => setFilter('origin', val)}
+        >
+          <SelectTrigger className="w-full sm:w-[180px] h-10 rounded-xl bg-white border-line text-sm">
+            <SelectValue placeholder="Toutes les origines" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes les origines</SelectItem>
+            <SelectItem value="ADMIN">Administration</SelectItem>
+            <SelectItem value="WEBSITE">Site web (pré-inscrits)</SelectItem>
           </SelectContent>
         </Select>
       </FilterBar>
@@ -382,6 +425,21 @@ export default function StudentsPage() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         initialData={editingStudent}
+        allClasses={allClasses}
+        levels={levels}
+      />
+
+      {/* Validate Registration Dialog */}
+      <ValidateRegistrationDialog
+        open={!!validateStudent}
+        onOpenChange={(open) => !open && setValidateStudent(null)}
+        studentId={validateStudent?.id || ''}
+        studentName={fullName(validateStudent)}
+        initialClassId={
+          typeof validateStudent?.schoolClass === 'object' && validateStudent?.schoolClass
+            ? validateStudent.schoolClass.id
+            : undefined
+        }
       />
 
       {/* Delete Confirmation */}

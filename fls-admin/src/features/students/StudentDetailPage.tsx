@@ -18,6 +18,9 @@ import {
   XCircle,
   Percent,
   KeyRound,
+  AlertCircle,
+  Check,
+  GraduationCap,
 } from 'lucide-react';
 import { studentsApi } from '@/api/students';
 import { parentAccountsApi } from '@/api/parentAccounts';
@@ -61,6 +64,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import StudentFormDialog from './StudentFormDialog';
+import ValidateRegistrationDialog from './ValidateRegistrationDialog';
 import EnrollStudentDialog from './EnrollStudentDialog';
 import PaymentFormDialog from '@/features/payments/PaymentFormDialog';
 import ParentAccountDialog from './ParentAccountDialog';
@@ -72,6 +76,7 @@ export default function StudentDetailPage() {
 
   const [activeTab, setActiveTab] = useState('groupes');
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [validateDialogOpen, setValidateDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [enrollDialogOpen, setEnrollDialogOpen] = useState(false);
   const [parentAccountDialogOpen, setParentAccountDialogOpen] = useState(false);
@@ -286,6 +291,34 @@ export default function StudentDetailPage() {
         ]}
       />
 
+      {/* Website Pre-registration Alert */}
+      {student.origin === 'WEBSITE' && !student.isActive && (
+        <div className="bg-amber-50/90 border border-amber-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+              <AlertCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-amber-950">
+                Élève pré-inscrit depuis le site web
+              </h2>
+              <p className="text-xs text-amber-800 mt-1">
+                Veuillez contacter la famille au{' '}
+                <span className="font-bold underline">{student.phone || 'numéro non renseigné'}</span>{' '}
+                puis lui affecter une classe pour valider l'inscription.
+              </p>
+            </div>
+          </div>
+          <Button
+            onClick={() => setValidateDialogOpen(true)}
+            className="bg-amber-600 hover:bg-amber-700 text-white rounded-xl h-10 px-5 font-semibold text-xs shrink-0 shadow-xs"
+          >
+            <Check className="w-4 h-4 mr-1.5" />
+            Valider l'inscription
+          </Button>
+        </div>
+      )}
+
       {/* Profile Card */}
       <div className="bg-white rounded-2xl border border-line/60 p-6 md:p-8 shadow-xs">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
@@ -303,9 +336,13 @@ export default function StudentDetailPage() {
                 <StatusBadge variant="brand">
                   {enrollments.length} {enrollments.length === 1 ? 'groupe' : 'groupes'}
                 </StatusBadge>
-                <StatusBadge variant={student.isActive ? 'success' : 'neutral'}>
-                  {student.isActive ? 'Actif' : 'Inactif'}
-                </StatusBadge>
+                {student.origin === 'WEBSITE' && !student.isActive ? (
+                  <StatusBadge variant="warning">Pré-inscrit</StatusBadge>
+                ) : (
+                  <StatusBadge variant={student.isActive ? 'success' : 'neutral'}>
+                    {student.isActive ? 'Actif' : 'Inactif'}
+                  </StatusBadge>
+                )}
                 {parentAccount && (
                   <button
                     onClick={() => setParentAccountDialogOpen(true)}
@@ -317,8 +354,16 @@ export default function StudentDetailPage() {
                 )}
               </div>
 
-              {/* 3-column / 4-item info grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 text-xs sm:text-sm text-muted">
+              {/* 3-column / 5-item info grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-4 text-xs sm:text-sm text-muted">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-muted shrink-0" />
+                  <span>
+                    {typeof student.schoolClass === 'object' && student.schoolClass
+                      ? student.schoolClass.name
+                      : 'Sans classe'}
+                  </span>
+                </div>
                 <div className="flex items-center gap-2">
                   <Cake className="w-4 h-4 text-muted shrink-0" />
                   <span>
@@ -817,6 +862,19 @@ export default function StudentDetailPage() {
         onOpenChange={setParentAccountDialogOpen}
         studentId={student.id}
         studentName={fullName(student)}
+      />
+
+      {/* Validate Registration Dialog */}
+      <ValidateRegistrationDialog
+        open={validateDialogOpen}
+        onOpenChange={setValidateDialogOpen}
+        studentId={student.id}
+        studentName={fullNameNatural(student)}
+        initialClassId={
+          typeof student.schoolClass === 'object' && student.schoolClass
+            ? student.schoolClass.id
+            : undefined
+        }
       />
     </div>
   );

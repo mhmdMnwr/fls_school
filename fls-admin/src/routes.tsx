@@ -16,18 +16,38 @@ import SessionsPage from '@/features/sessions/SessionsPage';
 import SessionDetailPage from '@/features/sessions/SessionDetailPage';
 import PaymentsPage from '@/features/payments/PaymentsPage';
 import SettingsPage from '@/features/settings/SettingsPage';
+import TestimonialsPage from '@/features/testimonials/TestimonialsPage';
 import NotFoundPage from '@/features/NotFoundPage';
 import ParentLoginPage from '@/features/parent/ParentLoginPage';
 import ParentLayout from '@/features/parent/ParentLayout';
 import ParentDashboardPage from '@/features/parent/ParentDashboardPage';
 import RequireParentAuth from '@/features/parent/RequireParentAuth';
+import LandingPage from '@/features/landing/LandingPage';
 
 export const router = createBrowserRouter([
+  // 1. Public Landing Page
+  {
+    path: '/',
+    element: <LandingPage />,
+    errorElement: <RouteErrorBoundary />,
+  },
+
+  // 2. Admin Authentication
   {
     path: '/login',
     element: <LoginPage />,
     errorElement: <RouteErrorBoundary />,
   },
+  {
+    path: '/admin',
+    element: <Navigate to="/dashboard" replace />,
+  },
+  {
+    path: '/admin/login',
+    element: <Navigate to="/login" replace />,
+  },
+
+  // 3. Parent Portal
   {
     path: '/parent',
     element: <ParentLoginPage />,
@@ -52,8 +72,9 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
+  // 4. Protected Admin Workspace
   {
-    path: '/',
     element: (
       <RequireAuth>
         <AppLayout />
@@ -64,7 +85,7 @@ export const router = createBrowserRouter([
       {
         errorElement: <RouteErrorBoundary />,
         children: [
-          { index: true, element: <DashboardPage /> },
+          { path: 'dashboard', element: <DashboardPage /> },
           { path: 'eleves', element: <StudentsPage /> },
           { path: 'eleves/:id', element: <StudentDetailPage /> },
           { path: 'niveaux', element: <LevelsPage /> },
@@ -76,6 +97,7 @@ export const router = createBrowserRouter([
           { path: 'seances', element: <SessionsPage /> },
           { path: 'seances/:id', element: <SessionDetailPage /> },
           { path: 'paiements', element: <PaymentsPage /> },
+          { path: 'avis', element: <TestimonialsPage /> },
           { path: 'parametres', element: <SettingsPage /> },
           ...(import.meta.env.DEV
             ? [
@@ -88,9 +110,14 @@ export const router = createBrowserRouter([
                 },
               ]
             : []),
-          { path: '*', element: <NotFoundPage /> },
         ],
       },
     ],
+  },
+
+  // 5. 404 Catch-All
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ]);

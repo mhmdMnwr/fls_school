@@ -18,6 +18,7 @@ import {
   ActivityLog,
   ActivityLogSchema,
 } from '../activity/activity-log.schema.js';
+import { TestimonialsModule } from '../testimonials/testimonials.module.js';
 import { DashboardController } from './dashboard.controller.js';
 import { DashboardService } from './dashboard.service.js';
 
@@ -34,6 +35,7 @@ import { DashboardService } from './dashboard.service.js';
       { name: Enrollment.name, schema: EnrollmentSchema },
       { name: ActivityLog.name, schema: ActivityLogSchema },
     ]),
+    TestimonialsModule,
   ],
   controllers: [DashboardController],
   providers: [DashboardService],

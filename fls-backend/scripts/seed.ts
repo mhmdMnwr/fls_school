@@ -179,16 +179,17 @@ async function run() {
   const class2ndeId = classMap.get('2nde')!;
 
   const studentsData = [
-    { firstName: 'Youssef', lastName: 'Idrissi', birthDate: new Date('2012-04-10T00:00:00.000Z'), phone: '0655001122', email: 'youssef@example.com', isActive: true },
-    { firstName: 'Salma', lastName: 'Tazi', birthDate: new Date('2012-07-22T00:00:00.000Z'), phone: '0655001123', email: 'salma@example.com', isActive: true },
-    { firstName: 'Amine', lastName: 'Chraibi', birthDate: new Date('2012-01-15T00:00:00.000Z'), phone: '0655001124', email: 'amine@example.com', isActive: true },
-    { firstName: 'Nour', lastName: 'Berrada', birthDate: new Date('2012-11-03T00:00:00.000Z'), phone: '0655001125', email: 'nour@example.com', isActive: true },
-    { firstName: 'Mehdi', lastName: 'Fassi', birthDate: new Date('2012-09-18T00:00:00.000Z'), phone: '0655001126', email: 'mehdi@example.com', isActive: true },
-    { firstName: 'Zineb', lastName: 'Kabbaj', birthDate: new Date('2008-03-12T00:00:00.000Z'), phone: '0655001127', email: 'zineb@example.com', isActive: true },
-    { firstName: 'Omar', lastName: 'Benjelloun', birthDate: new Date('2008-08-30T00:00:00.000Z'), phone: '0655001128', email: 'omar@example.com', isActive: true },
-    { firstName: 'Lina', lastName: 'Sqalli', birthDate: new Date('2008-05-19T00:00:00.000Z'), phone: '0655001129', email: 'lina@example.com', isActive: true },
-    { firstName: 'Hamza', lastName: 'Lahlou', birthDate: new Date('2008-12-01T00:00:00.000Z'), phone: '0655001130', email: 'hamza@example.com', isActive: true },
-    { firstName: 'Rania', lastName: 'El Amrani', birthDate: new Date('2008-06-25T00:00:00.000Z'), phone: '0655001131', email: 'rania@example.com', isActive: true },
+    { firstName: 'Youssef', lastName: 'Idrissi', birthDate: new Date('2012-04-10T00:00:00.000Z'), gender: 'MALE', phone: '0655001122', email: 'youssef@example.com', schoolClass: class6emeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Salma', lastName: 'Tazi', birthDate: new Date('2012-07-22T00:00:00.000Z'), gender: 'FEMALE', phone: '0655001123', email: 'salma@example.com', schoolClass: class6emeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Amine', lastName: 'Chraibi', birthDate: new Date('2012-01-15T00:00:00.000Z'), gender: 'MALE', phone: '0655001124', email: 'amine@example.com', schoolClass: class6emeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Nour', lastName: 'Berrada', birthDate: new Date('2012-11-03T00:00:00.000Z'), gender: 'FEMALE', phone: '0655001125', email: 'nour@example.com', schoolClass: class6emeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Mehdi', lastName: 'Fassi', birthDate: new Date('2012-09-18T00:00:00.000Z'), gender: 'MALE', phone: '0655001126', email: 'mehdi@example.com', schoolClass: class6emeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Zineb', lastName: 'Kabbaj', birthDate: new Date('2008-03-12T00:00:00.000Z'), gender: 'FEMALE', phone: '0655001127', email: 'zineb@example.com', schoolClass: class2ndeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Omar', lastName: 'Benjelloun', birthDate: new Date('2008-08-30T00:00:00.000Z'), gender: 'MALE', phone: '0655001128', email: 'omar@example.com', schoolClass: class2ndeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Lina', lastName: 'Sqalli', birthDate: new Date('2008-05-19T00:00:00.000Z'), gender: 'FEMALE', phone: '0655001129', email: 'lina@example.com', schoolClass: class2ndeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Hamza', lastName: 'Lahlou', birthDate: new Date('2008-12-01T00:00:00.000Z'), gender: 'MALE', phone: '0655001130', email: 'hamza@example.com', schoolClass: class2ndeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Rania', lastName: 'El Amrani', birthDate: new Date('2008-06-25T00:00:00.000Z'), gender: 'FEMALE', phone: '0655001131', email: 'rania@example.com', schoolClass: class2ndeId, origin: 'ADMIN', isActive: true },
+    { firstName: 'Ines', lastName: 'Bensouda', birthDate: new Date('2013-05-10T00:00:00.000Z'), gender: 'FEMALE', phone: '0655009999', email: 'ines@example.com', origin: 'WEBSITE', isActive: false },
   ];
 
   for (const s of studentsData) {
@@ -318,6 +319,94 @@ async function run() {
 
   const activityLogs = await db.collection('activitylogs').find().toArray();
   console.log(`Seeded ${activityLogs.length} activity logs.`);
+
+  // 13. Testimonials (6 testimonials: 3 APPROVED, 2 PENDING, 1 REJECTED)
+  const testimonialsData = [
+    {
+      student: students[0]._id,
+      authorName: 'Parent de Youssef I.',
+      rating: 5,
+      message: 'Très bonne école, encadrement sérieux et professeurs dévoués. Mon fils a beaucoup progressé en mathématiques cette année.',
+      status: 'APPROVED',
+      reviewedAt: new Date(),
+    },
+    {
+      student: students[1]._id,
+      authorName: 'Parent de Salma T.',
+      rating: 5,
+      message: "Un environnement d'apprentissage exceptionnel. Les enseignants sont toujours disponibles et à l'écoute des élèves.",
+      status: 'APPROVED',
+      reviewedAt: new Date(),
+    },
+    {
+      student: students[4]._id,
+      authorName: 'Parent de Mehdi F.',
+      rating: 4,
+      message: "Excellent suivi pédagogique. L'organisation des cours et le portail pour les parents sont très pratiques.",
+      status: 'APPROVED',
+      reviewedAt: new Date(),
+    },
+    {
+      student: students[3]._id,
+      authorName: 'Parent de Nour B.',
+      rating: 5,
+      message: 'Je recommande vivement cet établissement, les progrès de ma fille sont remarquables.',
+      status: 'PENDING',
+    },
+    {
+      student: students[5]._id,
+      authorName: 'Parent de Zineb K.',
+      rating: 4,
+      message: 'Une équipe pédagogique très professionnelle et une communication claire avec les familles.',
+      status: 'PENDING',
+    },
+    {
+      student: students[6]._id,
+      authorName: 'Parent de Omar B.',
+      rating: 2,
+      message: 'Je ne suis pas satisfait des horaires proposés pour les cours du weekend.',
+      status: 'REJECTED',
+      reviewedAt: new Date(),
+    },
+  ];
+
+  for (const t of testimonialsData) {
+    await db.collection('testimonials').updateOne(
+      { student: t.student, authorName: t.authorName },
+      { $set: { ...t, updatedAt: new Date() }, $setOnInsert: { createdAt: new Date() } },
+      { upsert: true },
+    );
+  }
+
+  const testimonials = await db.collection('testimonials').find().toArray();
+  console.log(`Seeded ${testimonials.length} testimonials.`);
+
+  // 14. Site Settings
+  const siteSettingsData = {
+    tagline: "L'excellence académique et l'épanouissement personnel au cœur de notre école",
+    aboutTitle: "Une institution dédiée à l'excellence et à la réussite de chaque élève",
+    aboutText1: "Fondée avec l'ambition d'offrir une formation d'excellence, FLS School accompagne chaque enfant dans un cadre structuré, moderne et bienveillant.",
+    aboutText2: "Nos équipes pédagogiques expérimentées appliquent des méthodes innovantes favorisant l'autonomie, la curiosité et l'épanouissement scolaire de nos élèves.",
+    address: "15 Avenue Habib Bourguiba, Tunis 1001",
+    phone: "+216 71 234 567",
+    whatsapp: "+216 98 765 432",
+    email: "contact@fls.school",
+    openingHours: "Lundi - Vendredi : 08h00 - 18h00\nSamedi : 08h00 - 13h00",
+    facebookUrl: "https://facebook.com/flsschool",
+    instagramUrl: "https://instagram.com/flsschool",
+    youtubeUrl: "https://youtube.com/@flsschool",
+    tiktokUrl: "https://tiktok.com/@flsschool",
+    mapsUrl: "https://maps.google.com/?q=36.8002,10.186",
+    mapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194.5779831998595!2d10.1800!3d36.8000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzbCsDQ4JzAwLjAiTiAxMMKwMTAnNDguMCJF!5e0!3m2!1sfr!2s!4v1700000000000!5m2!1sfr!2s",
+  };
+
+  await db.collection('sitesettings').updateOne(
+    {},
+    { $set: { ...siteSettingsData, updatedAt: new Date() }, $setOnInsert: { createdAt: new Date() } },
+    { upsert: true },
+  );
+  console.log('Seeded site settings.');
+
 
   console.log('Seeding completed successfully!');
   await mongoose.disconnect();

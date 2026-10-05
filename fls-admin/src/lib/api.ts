@@ -24,10 +24,13 @@ api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     const isLoginUrl = error.config?.url?.includes('/auth/login');
-    if (error.response?.status === 401 && !isLoginUrl) {
+    const isPublicUrl =
+      error.config?.url?.includes('/public') ||
+      error.config?.url?.includes('/parent/auth');
+    if (error.response?.status === 401 && !isLoginUrl && !isPublicUrl) {
       removeToken();
       toast.error('Session expirée, veuillez vous reconnecter');
-      if (window.location.pathname !== '/login') {
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
         window.location.href = '/login';
       }
     }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Enrollment, EnrollmentDocument } from './enrollment.schema.js';
@@ -34,6 +38,7 @@ export class EnrollmentsService {
 
     const group = await this.groupModel.findById(dto.groupId).lean().exec();
     if (!group) throw new NotFoundException('Group not found');
+
 
     return this.enrollmentModel.create({
       student: new Types.ObjectId(dto.studentId),

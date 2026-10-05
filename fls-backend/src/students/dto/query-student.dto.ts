@@ -1,4 +1,4 @@
-import { IsOptional, IsMongoId, IsString } from 'class-validator';
+import { IsOptional, IsMongoId, IsString, IsIn } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto.js';
 
@@ -17,4 +17,9 @@ export class QueryStudentDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   isActive?: string;
+
+  @ApiPropertyOptional({ enum: ['ADMIN', 'WEBSITE'] })
+  @IsOptional()
+  @IsIn(['ADMIN', 'WEBSITE'])
+  origin?: 'ADMIN' | 'WEBSITE';
 }

@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -46,6 +47,7 @@ export class StudentsService {
     classId?: string;
     levelId?: string;
     isActive?: string;
+    origin?: string;
     page: number;
     limit: number;
   }) {
@@ -54,24 +56,11 @@ export class StudentsService {
     if (query.isActive !== undefined) {
       filter.isActive = query.isActive === 'true';
     }
+    if (query.origin) {
+      filter.origin = query.origin;
+    }
     if (query.classId) {
-      const subjects = await this.classModel.db
-        .collection('subjects')
-        .find({ schoolClass: new Types.ObjectId(query.classId) })
-        .project({ _id: 1 })
-        .toArray();
-      const groups = await this.classModel.db
-        .collection('studygroups')
-        .find({ subject: { $in: subjects.map((s) => s._id) } })
-        .project({ _id: 1 })
-        .toArray();
-      const enrollments = await this.enrollmentModel
-        .find({ group: { $in: groups.map((g) => g._id) }, isActive: true })
-        .select('student')
-        .lean()
-        .exec();
-      const studentIds = enrollments.map((e: any) => e.student);
-      filter._id = { $in: studentIds };
+      filter.schoolClass = new Types.ObjectId(query.classId);
     }
     if (query.levelId) {
       const classes = await this.classModel
@@ -79,23 +68,7 @@ export class StudentsService {
         .select('_id')
         .lean()
         .exec();
-      const subjects = await this.classModel.db
-        .collection('subjects')
-        .find({ schoolClass: { $in: classes.map((c: any) => c._id) } })
-        .project({ _id: 1 })
-        .toArray();
-      const groups = await this.classModel.db
-        .collection('studygroups')
-        .find({ subject: { $in: subjects.map((s) => s._id) } })
-        .project({ _id: 1 })
-        .toArray();
-      const enrollments = await this.enrollmentModel
-        .find({ group: { $in: groups.map((g) => g._id) }, isActive: true })
-        .select('student')
-        .lean()
-        .exec();
-      const studentIds = enrollments.map((e: any) => e.student);
-      filter._id = { $in: studentIds };
+      filter.schoolClass = { $in: classes.map((c: any) => c._id) };
     }
     if (query.search) {
       const escaped = escapeRegex(query.search);
@@ -112,6 +85,7 @@ export class StudentsService {
       page: query.page,
       limit: query.limit,
       sort: { createdAt: -1 },
+      populate: { path: 'schoolClass', populate: { path: 'level' } } as any,
     });
 
     const studentIds = result.data.map((s: any) => new Types.ObjectId(s.id));
@@ -125,6 +99,7 @@ export class StudentsService {
 
     result.data = result.data.map((s: any) => ({
       ...s,
+      schoolClass: s.schoolClass ?? null,
       groupsCount: countMap.get(s.id) ?? 0,
     }));
 
@@ -132,7 +107,10 @@ export class StudentsService {
   }
 
   async findOne(id: string) {
-    const student = await this.studentModel.findById(id).exec();
+    const student = await this.studentModel
+      .findById(id)
+      .populate({ path: 'schoolClass', populate: { path: 'level' } })
+      .exec();
     if (!student) {
       throw new NotFoundException('Student not found');
     }
@@ -159,20 +137,33 @@ export class StudentsService {
 
     return {
       ...student.toJSON(),
+      schoolClass: student.schoolClass ?? null,
       enrollments: enrollments.map((e: any) => mapLeanDoc(e)),
       totalPaid,
     };
   }
 
   async create(dto: CreateStudentDto) {
+    if (dto.schoolClassId) {
+      await assertExists(this.classModel, dto.schoolClassId, 'Class');
+    }
+    const isActive = dto.isActive ?? false;
+    const schoolClass = dto.schoolClassId
+      ? new Types.ObjectId(dto.schoolClassId)
+      : null;
+
     const student = await this.studentModel.create({
       firstName: dto.firstName,
       lastName: dto.lastName,
       birthDate: new Date(dto.birthDate + 'T00:00:00.000Z'),
+      gender: dto.gender,
       phone: dto.phone,
       email: dto.email,
-      isActive: dto.isActive ?? true,
+      schoolClass: schoolClass ?? undefined,
+      isActive,
+      origin: 'ADMIN',
     });
+
     await this.activityService.log(
       'STUDENT_CREATED',
       'New student registered',
@@ -182,22 +173,37 @@ export class StudentsService {
   }
 
   async update(id: string, dto: UpdateStudentDto) {
+    const student = await this.studentModel.findById(id).exec();
+    if (!student) {
+      throw new NotFoundException('Student not found');
+    }
+
+    if (dto.schoolClassId !== undefined && dto.schoolClassId) {
+      await assertExists(this.classModel, dto.schoolClassId, 'Class');
+    }
+
     const update: Record<string, any> = {};
+
     if (dto.firstName !== undefined) update.firstName = dto.firstName;
     if (dto.lastName !== undefined) update.lastName = dto.lastName;
     if (dto.birthDate !== undefined)
       update.birthDate = new Date(dto.birthDate + 'T00:00:00.000Z');
+    if (dto.gender !== undefined) update.gender = dto.gender;
     if (dto.phone !== undefined) update.phone = dto.phone;
     if (dto.email !== undefined) update.email = dto.email;
+    if (dto.schoolClassId !== undefined) {
+      update.schoolClass = dto.schoolClassId
+        ? new Types.ObjectId(dto.schoolClassId)
+        : null;
+    }
     if (dto.isActive !== undefined) update.isActive = dto.isActive;
 
-    const student = await this.studentModel
+    const updated = await this.studentModel
       .findByIdAndUpdate(id, update, { new: true })
+      .populate({ path: 'schoolClass', populate: { path: 'level' } })
       .exec();
-    if (!student) {
-      throw new NotFoundException('Student not found');
-    }
-    return student;
+
+    return updated;
   }
 
   async remove(id: string) {

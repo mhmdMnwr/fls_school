@@ -135,7 +135,7 @@ export const NotificationBell: React.FC = () => {
 
         <div className="p-3 border-t border-line-soft text-center bg-[#F8F9FD]">
           <Link
-            to="/"
+            to="/dashboard"
             onClick={() => setOpen(false)}
             className="text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors"
           >

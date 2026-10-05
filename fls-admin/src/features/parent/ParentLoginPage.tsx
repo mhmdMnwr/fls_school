@@ -66,8 +66,12 @@ export default function ParentLoginPage() {
         <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-[#5B4BF5]/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xs flex items-center justify-center border border-white/15">
-            <GraduationCap className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md p-1">
+            <img
+              src="/images/fls-logo.png"
+              alt="FLS School Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <div className="font-bold text-lg leading-tight">FLS School</div>
@@ -76,8 +80,12 @@ export default function ParentLoginPage() {
         </div>
 
         <div className="relative z-10 my-auto space-y-6">
-          <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center shadow-xl border border-white/10">
-            <GraduationCap className="w-12 h-12 text-white" />
+          <div className="w-20 h-20 rounded-2xl bg-white flex items-center justify-center shadow-2xl p-2 mb-4">
+            <img
+              src="/images/fls-logo.png"
+              alt="FLS School Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-white">
@@ -121,8 +129,12 @@ export default function ParentLoginPage() {
         <div className="w-full max-w-[420px] bg-white rounded-2xl border border-line/60 p-8 shadow-sm">
           {/* Mobile brand header */}
           <div className="flex items-center gap-3 mb-6 lg:hidden">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#312E81] to-[#4338CA] flex items-center justify-center text-white">
-              <GraduationCap className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-xs p-1">
+              <img
+                src="/images/fls-logo.png"
+                alt="FLS School Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <div className="font-bold text-base text-ink">FLS School</div>

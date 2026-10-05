@@ -33,6 +33,7 @@ export class DashboardService {
     const [
       totalStudents,
       newThisMonth,
+      preRegistrations,
       totalLevels,
       totalSubjects,
       totalTeachers,
@@ -42,6 +43,10 @@ export class DashboardService {
         isActive: true,
         createdAt: { $gte: firstOfMonth },
       }),
+      this.studentModel.countDocuments({
+        origin: 'WEBSITE',
+        isActive: false,
+      }),
       this.levelModel.countDocuments(),
       this.subjectModel.countDocuments(),
       this.teacherModel.countDocuments({ isActive: true }),
@@ -49,6 +54,7 @@ export class DashboardService {
 
     return {
       students: { total: totalStudents, newThisMonth },
+      preRegistrations,
       levels: { total: totalLevels },
       subjects: { total: totalSubjects },
       teachers: { total: totalTeachers },
@@ -171,73 +177,19 @@ export class DashboardService {
   async getRecentStudents(limit: number = 5) {
     const students = await this.studentModel
       .find()
+      .populate({ path: 'schoolClass', populate: { path: 'level' } })
       .sort({ createdAt: -1 })
       .limit(limit)
       .lean()
       .exec();
 
-    const studentIds = students.map((s: any) => s._id);
-    const enrollments = await this.studentModel.db
-      .collection('enrollments')
-      .aggregate([
-        { $match: { student: { $in: studentIds }, isActive: true } },
-        {
-          $lookup: {
-            from: 'studygroups',
-            localField: 'group',
-            foreignField: '_id',
-            as: 'grp',
-          },
-        },
-        { $unwind: '$grp' },
-        {
-          $lookup: {
-            from: 'subjects',
-            localField: 'grp.subject',
-            foreignField: '_id',
-            as: 'sub',
-          },
-        },
-        { $unwind: '$sub' },
-        {
-          $lookup: {
-            from: 'schoolclasses',
-            localField: 'sub.schoolClass',
-            foreignField: '_id',
-            as: 'cls',
-          },
-        },
-        { $unwind: '$cls' },
-        {
-          $lookup: {
-            from: 'levels',
-            localField: 'cls.level',
-            foreignField: '_id',
-            as: 'lvl',
-          },
-        },
-        { $unwind: '$lvl' },
-      ])
-      .toArray();
-
-    const enrollMap = new Map<string, any[]>();
-    for (const e of enrollments) {
-      const sId = e.student.toString();
-      if (!enrollMap.has(sId)) enrollMap.set(sId, []);
-      enrollMap.get(sId)!.push(e);
-    }
-
     return students.map((s: any) => {
-      const studentEnrolls = enrollMap.get(s._id.toString()) || [];
-      const firstEnroll = studentEnrolls[0];
-      const className = firstEnroll?.cls?.name ?? '';
-      const levelName = firstEnroll?.lvl?.name ?? '';
-
+      const cls = s.schoolClass;
       return {
         id: s._id.toString(),
         fullName: `${s.firstName} ${s.lastName}`,
-        className,
-        levelName,
+        className: cls?.name ?? null,
+        levelName: cls?.level?.name ?? null,
         createdAt: s.createdAt,
         isActive: s.isActive,
       };

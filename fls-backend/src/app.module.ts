@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard.js';
 import { AdminModule } from './admin/admin.module.js';
 import { AuthModule } from './auth/auth.module.js';
@@ -19,10 +20,19 @@ import { DashboardModule } from './dashboard/dashboard.module.js';
 import { ActivityModule } from './activity/activity.module.js';
 import { ParentAccountsModule } from './parent-accounts/parent-accounts.module.js';
 import { ParentPortalModule } from './parent-portal/parent-portal.module.js';
+import { SiteSettingsModule } from './site-settings/site-settings.module.js';
+import { TestimonialsModule } from './testimonials/testimonials.module.js';
+import { PublicModule } from './public/public.module.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60_000,
+        limit: 100,
+      },
+    ]),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -46,11 +56,18 @@ import { ParentPortalModule } from './parent-portal/parent-portal.module.js';
     ActivityModule,
     ParentAccountsModule,
     ParentPortalModule,
+    SiteSettingsModule,
+    TestimonialsModule,
+    PublicModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

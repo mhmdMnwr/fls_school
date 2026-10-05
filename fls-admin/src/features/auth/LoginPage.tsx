@@ -55,7 +55,7 @@ export default function LoginPage() {
 
   // Redirect if already logged in
   if (hasToken()) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const onSubmit = async (values: LoginFormValues) => {
@@ -63,8 +63,8 @@ export default function LoginPage() {
       setErrorMessage(null);
       setIsSubmitting(true);
       await login(values);
-      const from = (location.state as any)?.from?.pathname || '/';
-      navigate(from, { replace: true });
+      const from = (location.state as any)?.from?.pathname;
+      navigate(from && from !== '/' ? from : '/dashboard', { replace: true });
     } catch {
       setErrorMessage('Email ou mot de passe incorrect');
     } finally {
@@ -81,8 +81,12 @@ export default function LoginPage() {
         <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-[#5B4BF5]/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-xs flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md p-1">
+            <img
+              src="/images/fls-logo.png"
+              alt="FLS School Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <div className="font-bold text-lg leading-tight">{APP_NAME}</div>
@@ -91,8 +95,12 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 flex flex-col items-center justify-center text-center my-auto">
-          <div className="w-24 h-24 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mb-6 shadow-xl border border-white/10">
-            <GraduationCap className="w-14 h-14 text-white" />
+          <div className="w-24 h-24 rounded-2xl bg-white flex items-center justify-center mb-6 shadow-2xl p-2 border-2 border-white/20">
+            <img
+              src="/images/fls-logo.png"
+              alt="FLS School Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-white">
             {APP_NAME}
@@ -114,8 +122,12 @@ export default function LoginPage() {
         <div className="w-full max-w-[420px] bg-white rounded-2xl border border-line/60 p-8 shadow-sm">
           {/* Mobile brand header */}
           <div className="flex items-center gap-3 mb-6 lg:hidden">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 flex items-center justify-center text-white">
-              <GraduationCap className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-xs p-1">
+              <img
+                src="/images/fls-logo.png"
+                alt="FLS School Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <div className="font-bold text-base text-ink">{APP_NAME}</div>

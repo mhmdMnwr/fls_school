@@ -6,6 +6,8 @@ import {
   IsEmail,
   IsBoolean,
   IsDateString,
+  IsIn,
+  IsMongoId,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -29,6 +31,10 @@ export class CreateStudentDto {
   @IsDateString()
   birthDate!: string;
 
+  @ApiProperty({ enum: ['MALE', 'FEMALE'], example: 'FEMALE' })
+  @IsIn(['MALE', 'FEMALE'])
+  gender!: 'MALE' | 'FEMALE';
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
@@ -40,7 +46,12 @@ export class CreateStudentDto {
   @IsEmail()
   email?: string;
 
-  @ApiPropertyOptional({ default: true })
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsMongoId()
+  schoolClassId?: string;
+
+  @ApiPropertyOptional({ default: false })
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;

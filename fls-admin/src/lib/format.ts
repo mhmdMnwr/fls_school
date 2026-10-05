@@ -12,6 +12,17 @@ export function formatDate(iso?: string | Date | null): string {
   }
 }
 
+export function formatDateTime(iso?: string | Date | null): string {
+  if (!iso) return '—';
+  try {
+    const d = typeof iso === 'string' ? new Date(iso) : iso;
+    if (isNaN(d.getTime())) return '—';
+    return format(d, "dd/MM/yyyy 'à' HH:mm", { locale: fr });
+  } catch {
+    return '—';
+  }
+}
+
 export function formatLongDate(date: string | Date = new Date()): string {
   try {
     const d = typeof date === 'string' ? new Date(date) : date;

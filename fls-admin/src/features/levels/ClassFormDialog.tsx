@@ -163,7 +163,7 @@ export const ClassFormDialog: React.FC<ClassFormDialogProps> = ({
             error={errors.name?.message}
           >
             <Input
-              placeholder="ex. 1ère année scientifique"
+              placeholder="Nom de la classe"
               className="h-10 rounded-xl"
               {...register('name')}
             />
