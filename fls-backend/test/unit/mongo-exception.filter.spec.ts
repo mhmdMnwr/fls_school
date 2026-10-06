@@ -62,6 +62,7 @@ describe('MongoExceptionFilter', () => {
     expect(mockResponse.json).toHaveBeenCalledWith({
       statusCode: HttpStatus.BAD_REQUEST,
       message: 'Custom bad request',
+      error: 'Bad Request',
     });
   });
 });

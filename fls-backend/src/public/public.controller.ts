@@ -18,6 +18,16 @@ import { PaginationQueryDto } from '../common/dto/pagination-query.dto.js';
 export class PublicController {
   constructor(private publicService: PublicService) {}
 
+  @Get('info')
+  getInfo() {
+    return { status: 'ok', uptime: process.uptime() };
+  }
+
+  @Get('health')
+  getHealth() {
+    return { status: 'ok', timestamp: new Date().toISOString() };
+  }
+
   @Get('site-info')
   getSiteInfo() {
     return this.publicService.getSiteInfo();

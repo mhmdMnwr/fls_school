@@ -39,6 +39,14 @@ export class EnrollmentsService {
     const group = await this.groupModel.findById(dto.groupId).lean().exec();
     if (!group) throw new NotFoundException('Group not found');
 
+    const subject = await this.subjectModel.findById(group.subject).lean().exec();
+    if (!subject) throw new NotFoundException('Subject not found');
+
+    if (subject.schoolClass.toString() !== (student as any).schoolClass.toString()) {
+      throw new BadRequestException(
+        "Subject does not belong to the student's class",
+      );
+    }
 
     return this.enrollmentModel.create({
       student: new Types.ObjectId(dto.studentId),
