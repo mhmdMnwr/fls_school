@@ -75,7 +75,7 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({ settings }) => {
       : undefined);
 
   return (
-    <footer id="contact" className="bg-[#0B2545] text-white pt-14 pb-8 border-t border-white/10 scroll-mt-10 overflow-x-hidden w-full max-w-full">
+    <footer id="contact" className="bg-[#0B2545] text-white pt-14 pb-8 border-t border-white/10 scroll-mt-20 overflow-x-hidden w-full max-w-full">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 min-w-0">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-12 border-b border-white/15">
           {/* Col 1: Brand & Slogan (lg:col-span-4) */}

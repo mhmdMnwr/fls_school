@@ -18,8 +18,8 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({ teachers = [] 
       ];
 
   return (
-    <section id="professeurs" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-slate-100 scroll-mt-16">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+    <section id="professeurs" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-slate-100 scroll-mt-20 overflow-x-hidden w-full max-w-full">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 min-w-0">
         <div className="mb-10 text-center sm:text-left">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2545] tracking-tight">
             Nos professeurs

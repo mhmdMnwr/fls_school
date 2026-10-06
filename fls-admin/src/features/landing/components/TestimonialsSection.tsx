@@ -42,8 +42,8 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     : DEFAULT_TESTIMONIALS;
 
   return (
-    <section id="avis" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-slate-100 scroll-mt-16">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+    <section id="avis" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-slate-100 scroll-mt-20 overflow-x-hidden w-full max-w-full">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 min-w-0">
         <div className="flex items-center justify-between mb-10">
           <div className="space-y-1.5 max-w-xl">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2545] tracking-tight">

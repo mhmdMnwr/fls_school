@@ -23,7 +23,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ settings }) => {
     "Nos équipes pédagogiques expérimentées appliquent des méthodes innovantes favorisant l'autonomie, la curiosité et l'épanouissement scolaire de nos élèves.";
 
   return (
-    <section id="a-propos" className="py-16 sm:py-20 bg-white border-b border-slate-100 scroll-mt-16 overflow-x-hidden w-full max-w-full">
+    <section id="a-propos" className="py-16 sm:py-20 bg-white border-b border-slate-100 scroll-mt-20 overflow-x-hidden w-full max-w-full">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 min-w-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           {/* Column 1: School Building Photo as in reference */}

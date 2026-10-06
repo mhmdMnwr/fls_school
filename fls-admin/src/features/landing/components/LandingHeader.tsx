@@ -46,7 +46,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ settings }) => {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 h-[78px] bg-white/98 backdrop-blur-md border-b border-slate-100 transition-all duration-200 ${
+        className={`fixed top-0 left-0 right-0 z-40 w-full h-[78px] bg-white/98 backdrop-blur-md border-b border-slate-100 transition-all duration-200 ${
           isScrolled ? 'shadow-md shadow-slate-200/50' : ''
         }`}
       >
@@ -112,7 +112,8 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ settings }) => {
         </div>
       </header>
 
-      {/* Mobile Drawer */}
+      {/* Spacer so page content does not hide behind the fixed navbar */}
+      <div className="h-[78px] w-full shrink-0" aria-hidden="true" />
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div

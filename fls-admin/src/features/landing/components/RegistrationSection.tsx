@@ -100,7 +100,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ settin
   };
 
   return (
-    <section id="inscription" className="py-16 sm:py-20 bg-white border-b border-slate-100 scroll-mt-16 overflow-x-hidden w-full max-w-full">
+    <section id="inscription" className="py-16 sm:py-20 bg-white border-b border-slate-100 scroll-mt-20 overflow-x-hidden w-full max-w-full">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 min-w-0">
         <div className="text-center max-w-xl mx-auto mb-10 space-y-2">
           <span className="inline-block px-3.5 py-1 rounded-full bg-slate-100 text-xs font-bold uppercase tracking-wider text-[#0B2545]">
