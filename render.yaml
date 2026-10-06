@@ -1,0 +1,45 @@
+services:
+  # ==============================================================
+  # 1. NestJS Backend API (Web Service)
+  # ==============================================================
+  - type: web
+    name: fls-school-backend
+    runtime: node
+    plan: free
+    rootDir: fls-backend
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /api/public/info
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: ADMIN_EMAIL
+        value: admin@fls.school
+      - key: ADMIN_PASSWORD
+        value: ChangeMe123!
+      - key: CORS_ORIGIN
+        value: "*"
+
+  # ==============================================================
+  # 2. React / Vite Frontend (Static Site)
+  # ==============================================================
+  - type: web
+    name: fls-school-frontend
+    runtime: static
+    plan: free
+    rootDir: fls-admin
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false
