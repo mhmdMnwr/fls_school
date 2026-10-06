@@ -29,8 +29,9 @@ services:
   # ==============================================================
   # 2. React / Vite Frontend (Static Site)
   # ==============================================================
-  - type: static
+  - type: web
     name: fls-school-frontend
+    runtime: static
     rootDir: fls-admin
     buildCommand: npm install && npm run build
     staticPublishPath: dist
