@@ -27,10 +27,16 @@ export class SiteSettingsService {
   async updateSettings(
     dto: UpdateSiteSettingsDto,
   ): Promise<SiteSettingsDocument> {
+    const updateData: any = { ...dto };
+    if (updateData.tagline && !updateData.heroTagline) {
+      updateData.heroTagline = updateData.tagline;
+    }
+    delete updateData.tagline;
+
     const updated = await this.siteSettingsModel
       .findOneAndUpdate(
         { key: 'main' },
-        { $set: dto },
+        { $set: updateData },
         { new: true, upsert: true },
       )
       .exec();

@@ -153,15 +153,28 @@ export const SiteSettingsTab: React.FC = () => {
         ? `https://maps.google.com/maps?q=${encodeURIComponent(values.address.trim())}&t=&z=15&ie=UTF8&iwloc=&output=embed`
         : settings?.googleMapsEmbedUrl || '';
 
+      // Clean social links: only keep entries that have both name and url
+      const cleanSocialLinks = (values.socialLinks || [])
+        .filter((link) => link.name?.trim() && link.url?.trim())
+        .map(({ name, url }) => ({ name: name.trim(), url: url.trim() }));
+
       return siteSettingsApi.updateSiteSettings({
-        ...values,
-        tagline: values.heroTagline,
+        heroTagline: values.heroTagline?.trim() || '',
+        tagline: values.heroTagline?.trim() || '',
+        heroDescription: values.heroDescription?.trim() || '',
+        aboutTitle: values.aboutTitle?.trim() || '',
+        aboutText1: values.aboutText1?.trim() || '',
+        aboutText2: values.aboutText2?.trim() || '',
+        phone: values.phone?.trim() || '',
+        whatsapp: values.whatsapp?.trim() || '',
+        email: values.email?.trim() || '',
+        address: values.address?.trim() || '',
+        socialLinks: cleanSocialLinks,
         googleMapsEmbedUrl: autoEmbed,
-      } as any);
+      });
     },
-    onSuccess: (updated) => {
+    onSuccess: () => {
       toast.success('Paramètres enregistrés avec succès');
-      reset(updated as any);
       queryClient.invalidateQueries({ queryKey: ['settings', 'site'] });
       queryClient.invalidateQueries({ queryKey: ['public', 'site-settings'] });
     },

@@ -43,10 +43,15 @@ export class MongoExceptionFilter implements ExceptionFilter {
     // Let NestJS handle its own HttpExceptions
     if (exception?.getStatus) {
       const status = exception.getStatus();
-      response.status(status).json({
-        statusCode: status,
-        message: exception.message,
-      });
+      const res = exception.getResponse();
+      if (typeof res === 'object' && res !== null) {
+        response.status(status).json(res);
+      } else {
+        response.status(status).json({
+          statusCode: status,
+          message: res || exception.message,
+        });
+      }
       return;
     }
 
