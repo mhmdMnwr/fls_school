@@ -264,6 +264,9 @@ export interface SiteSettings {
   aboutText1?: string;
   aboutText2?: string;
   address?: string;
+  mapLatitude?: number;
+  mapLongitude?: number;
+  mapZoom?: number;
   googleMapsEmbedUrl?: string;
   mapsEmbedUrl?: string;
   mapsUrl?: string;

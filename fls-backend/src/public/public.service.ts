@@ -135,15 +135,19 @@ export class PublicService {
   async getSiteSettings() {
     const settings = await this.siteSettingsService.getSettings();
 
-    const mapsUrl = settings.address
-      ? `https://maps.google.com/?q=${encodeURIComponent(settings.address)}`
-      : '';
+    const hasCoords =
+      typeof settings.mapLatitude === 'number' &&
+      typeof settings.mapLongitude === 'number' &&
+      !isNaN(settings.mapLatitude) &&
+      !isNaN(settings.mapLongitude);
 
-    const autoEmbedUrl =
-      settings.googleMapsEmbedUrl ||
-      (settings.address
-        ? `https://maps.google.com/maps?q=${encodeURIComponent(settings.address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`
-        : '');
+    const mapsUrl = hasCoords
+      ? `https://www.google.com/maps?q=${settings.mapLatitude},${settings.mapLongitude}`
+      : settings.mapsUrl || (settings.address ? `https://maps.google.com/?q=${encodeURIComponent(settings.address)}` : '');
+
+    const autoEmbedUrl = hasCoords
+      ? `https://maps.google.com/maps?q=${settings.mapLatitude},${settings.mapLongitude}&z=${settings.mapZoom || 15}&output=embed`
+      : settings.googleMapsEmbedUrl || '';
 
     return {
       heroTagline: settings.heroTagline || '',
@@ -153,6 +157,9 @@ export class PublicService {
       aboutText1: settings.aboutText1 || '',
       aboutText2: settings.aboutText2 || '',
       address: settings.address || '',
+      mapLatitude: settings.mapLatitude,
+      mapLongitude: settings.mapLongitude,
+      mapZoom: settings.mapZoom,
       googleMapsEmbedUrl: autoEmbedUrl,
       mapsEmbedUrl: autoEmbedUrl,
       mapsUrl,

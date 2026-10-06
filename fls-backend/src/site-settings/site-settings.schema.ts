@@ -36,8 +36,20 @@ export class SiteSettings {
   @Prop({ default: '' })
   address!: string;
 
+  @Prop({ type: Number, default: 36.8065 })
+  mapLatitude!: number;
+
+  @Prop({ type: Number, default: 10.1815 })
+  mapLongitude!: number;
+
+  @Prop({ type: Number, default: 15 })
+  mapZoom!: number;
+
   @Prop({ default: '' })
   googleMapsEmbedUrl!: string;
+
+  @Prop({ default: '' })
+  mapsUrl!: string;
 
   @Prop({ default: '' })
   phone!: string;

@@ -6,6 +6,7 @@ import {
   IsEmail,
   IsArray,
   ValidateNested,
+  IsNumber,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
@@ -84,10 +85,35 @@ export class UpdateSiteSettingsDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  mapLatitude?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  mapLongitude?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  mapZoom?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   @MaxLength(2000)
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   googleMapsEmbedUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(2000)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  mapsUrl?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

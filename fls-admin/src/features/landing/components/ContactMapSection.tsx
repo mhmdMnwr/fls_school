@@ -18,9 +18,22 @@ export const ContactMapSection: React.FC<ContactMapSectionProps> = ({ settings }
   const whatsappHref = (wa?: string) =>
     wa ? `https://wa.me/${wa.replace(/[^\d]/g, '')}` : '#';
 
-  const embedUrl = settings?.googleMapsEmbedUrl || settings?.mapsEmbedUrl;
+  const lat = settings?.mapLatitude;
+  const lng = settings?.mapLongitude;
+  const hasCoordinates =
+    typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng);
+
+  const embedUrl = hasCoordinates
+    ? `https://maps.google.com/maps?q=${lat},${lng}&z=${settings?.mapZoom || 15}&output=embed`
+    : settings?.googleMapsEmbedUrl || settings?.mapsEmbedUrl;
+
+  const mapsExternalUrl = hasCoordinates
+    ? `https://www.google.com/maps?q=${lat},${lng}`
+    : settings?.mapsUrl ||
+      (settings?.address ? `https://maps.google.com/?q=${encodeURIComponent(settings.address)}` : 'https://maps.google.com');
+
   const isValidEmbedUrl = Boolean(
-    embedUrl && /^https:\/\/(www\.|maps\.)?google\.[a-z.]+\/maps.*$/.test(embedUrl.trim())
+    embedUrl && (/^https:\/\/(www\.|maps\.)?google\.[a-z.]+\/maps.*$/.test(embedUrl.trim()) || hasCoordinates)
   );
 
   const hasPhone = Boolean(settings?.phone);
@@ -155,10 +168,7 @@ export const ContactMapSection: React.FC<ContactMapSectionProps> = ({ settings }
                 <div className="flex items-center justify-between text-xs text-slate-500 px-2 pt-1">
                   <span className="font-semibold text-[#0B2545]">{settings?.address || 'FLS School'}</span>
                   <a
-                    href={
-                      settings?.mapsUrl ||
-                      `https://maps.google.com/?q=${encodeURIComponent(settings?.address || 'FLS School')}`
-                    }
+                    href={mapsExternalUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 font-bold text-[#0B2545] hover:text-[#F5A623] transition-colors"

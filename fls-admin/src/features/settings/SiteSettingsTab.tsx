@@ -8,7 +8,6 @@ import {
   Share2,
   Loader2,
   Save,
-  ExternalLink,
   Sparkles,
   BookOpen,
   Phone,
@@ -23,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { FormField } from '@/components/common/FormField';
+import { SchoolMapPicker } from '@/components/common/SchoolMapPicker';
 import { getErrorMessage } from '@/lib/errors';
 
 const SUGGESTED_NETWORKS = [
@@ -43,21 +43,27 @@ const socialLinkSchema = z.object({
 
 const siteSettingsSchema = z.object({
   // Textes Section Principale (Hero)
-  heroTagline: z.string().max(200, '200 caractères maximum').optional().or(z.literal('')),
-  heroDescription: z.string().max(600, '600 caractères maximum').optional().or(z.literal('')),
+  heroTagline: z.string().max(250, '250 caractères maximum').optional().or(z.literal('')),
+  heroDescription: z.string().max(1000, '1000 caractères maximum').optional().or(z.literal('')),
 
   // Textes Section À Propos
-  aboutTitle: z.string().max(200, '200 caractères maximum').optional().or(z.literal('')),
-  aboutText1: z.string().max(1000, '1000 caractères maximum').optional().or(z.literal('')),
-  aboutText2: z.string().max(1000, '1000 caractères maximum').optional().or(z.literal('')),
+  aboutTitle: z.string().max(250, '250 caractères maximum').optional().or(z.literal('')),
+  aboutText1: z.string().max(2000, '2000 caractères maximum').optional().or(z.literal('')),
+  aboutText2: z.string().max(2000, '2000 caractères maximum').optional().or(z.literal('')),
 
   // Coordonnées de contact
-  phone: z.string().max(30, '30 caractères maximum').optional().or(z.literal('')),
-  whatsapp: z.string().max(30, '30 caractères maximum').optional().or(z.literal('')),
+  phone: z.string().max(50, '50 caractères maximum').optional().or(z.literal('')),
+  whatsapp: z.string().max(50, '50 caractères maximum').optional().or(z.literal('')),
   email: z.string().email('Adresse e-mail invalide').optional().or(z.literal('')),
 
-  // Localisation (uniquement 2 éléments : adresse saisie à la main + la carte)
-  address: z.string().max(250, '250 caractères maximum').optional().or(z.literal('')),
+  // Localisation (2 éléments totalement indépendants)
+  // 1. Adresse écrite à la main
+  address: z.string().max(500, '500 caractères maximum').optional().or(z.literal('')),
+
+  // 2. Coordonnées de la carte
+  mapLatitude: z.number().optional(),
+  mapLongitude: z.number().optional(),
+  mapZoom: z.number().optional(),
 
   // Réseaux sociaux dynamiques
   socialLinks: z.array(socialLinkSchema).default([]),
@@ -79,6 +85,7 @@ export const SiteSettingsTab: React.FC = () => {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<SiteSettingsFormValues>({
     resolver: zodResolver(siteSettingsSchema),
@@ -92,6 +99,9 @@ export const SiteSettingsTab: React.FC = () => {
       whatsapp: '',
       email: '',
       address: '',
+      mapLatitude: 36.8065,
+      mapLongitude: 10.1815,
+      mapZoom: 15,
       socialLinks: [],
     },
   });
@@ -101,12 +111,9 @@ export const SiteSettingsTab: React.FC = () => {
     name: 'socialLinks',
   });
 
-  const currentAddress = watch('address');
-
-  // Compute map embed URL live from address or stored embed URL
-  const mapEmbedSource = currentAddress?.trim()
-    ? `https://maps.google.com/maps?q=${encodeURIComponent(currentAddress.trim())}&t=&z=15&ie=UTF8&iwloc=&output=embed`
-    : settings?.googleMapsEmbedUrl || '';
+  const watchedLat = watch('mapLatitude') ?? 36.8065;
+  const watchedLng = watch('mapLongitude') ?? 10.1815;
+  const watchedZoom = watch('mapZoom') ?? 15;
 
   useEffect(() => {
     if (settings) {
@@ -131,6 +138,19 @@ export const SiteSettingsTab: React.FC = () => {
         }
       }
 
+      // If coordinates exist, use them; otherwise default to Tunis or parse from embed if available
+      let lat = settings.mapLatitude;
+      let lng = settings.mapLongitude;
+      let zoom = settings.mapZoom || 15;
+
+      if ((lat === undefined || isNaN(lat)) && settings.googleMapsEmbedUrl) {
+        const match = settings.googleMapsEmbedUrl.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+        if (match) {
+          lat = parseFloat(match[1]);
+          lng = parseFloat(match[2]);
+        }
+      }
+
       reset({
         heroTagline: settings.heroTagline || settings.tagline || '',
         heroDescription: settings.heroDescription || '',
@@ -141,6 +161,9 @@ export const SiteSettingsTab: React.FC = () => {
         whatsapp: settings.whatsapp || '',
         email: settings.email || '',
         address: settings.address || '',
+        mapLatitude: typeof lat === 'number' && !isNaN(lat) ? lat : 36.8065,
+        mapLongitude: typeof lng === 'number' && !isNaN(lng) ? lng : 10.1815,
+        mapZoom: zoom,
         socialLinks: initialSocialLinks,
       });
     }
@@ -148,15 +171,17 @@ export const SiteSettingsTab: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: (values: SiteSettingsFormValues) => {
-      // Auto-compute googleMapsEmbedUrl from address
-      const autoEmbed = values.address?.trim()
-        ? `https://maps.google.com/maps?q=${encodeURIComponent(values.address.trim())}&t=&z=15&ie=UTF8&iwloc=&output=embed`
-        : settings?.googleMapsEmbedUrl || '';
-
       // Clean social links: only keep entries that have both name and url
       const cleanSocialLinks = (values.socialLinks || [])
         .filter((link) => link.name?.trim() && link.url?.trim())
         .map(({ name, url }) => ({ name: name.trim(), url: url.trim() }));
+
+      const lat = typeof values.mapLatitude === 'number' && !isNaN(values.mapLatitude) ? values.mapLatitude : 36.8065;
+      const lng = typeof values.mapLongitude === 'number' && !isNaN(values.mapLongitude) ? values.mapLongitude : 10.1815;
+      const zoom = values.mapZoom || 15;
+
+      const embedUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=${zoom}&output=embed`;
+      const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
 
       return siteSettingsApi.updateSiteSettings({
         heroTagline: values.heroTagline?.trim() || '',
@@ -169,8 +194,12 @@ export const SiteSettingsTab: React.FC = () => {
         whatsapp: values.whatsapp?.trim() || '',
         email: values.email?.trim() || '',
         address: values.address?.trim() || '',
+        mapLatitude: lat,
+        mapLongitude: lng,
+        mapZoom: zoom,
+        googleMapsEmbedUrl: embedUrl,
+        mapsUrl,
         socialLinks: cleanSocialLinks,
-        googleMapsEmbedUrl: autoEmbed,
       });
     },
     onSuccess: () => {
@@ -347,70 +376,58 @@ export const SiteSettingsTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Section 4: Localisation & Carte (Uniquement 2 éléments : adresse saisie à la main + la carte) */}
-      <div className="bg-white rounded-2xl border border-line/60 p-6 shadow-xs space-y-5">
+      {/* Section 4: Localisation & Carte (2 éléments indépendants : Adresse écrite + Carte) */}
+      <div className="bg-white rounded-2xl border border-line/60 p-6 shadow-xs space-y-6">
         <div className="flex items-center gap-2 border-b border-line/40 pb-3">
           <MapPin className="w-5 h-5 text-brand-600" />
           <div>
             <h3 className="text-base font-bold text-ink">Localisation</h3>
             <p className="text-xs text-muted">
-              Indiquez l'adresse écrite à la main et obtenez l'emplacement sur la carte
+              L'adresse textuelle et l'emplacement sur la carte sont deux réglages totalement distincts
             </p>
           </div>
         </div>
 
-        <div className="space-y-4 pt-1">
+        <div className="space-y-6 pt-1">
           {/* 1. Static address write by hand field */}
-          <FormField
-            label="Adresse de l'établissement (saisie à la main)"
-            error={errors.address?.message}
-          >
-            <Input
-              placeholder="Ex: 15 Avenue Habib Bourguiba, Tunis 1001"
-              className="h-10 rounded-xl"
-              {...register('address')}
-            />
-          </FormField>
+          <div className="space-y-1.5">
+            <FormField
+              label="1. Adresse de l'établissement (saisie à la main)"
+              error={errors.address?.message}
+            >
+              <Input
+                placeholder="Ex: 15 Avenue Habib Bourguiba, Tunis 1001 (ou indication d'étage, quartier...)"
+                className="h-10 rounded-xl"
+                {...register('address')}
+              />
+            </FormField>
+            <p className="text-[11px] text-muted">
+              Ce texte s'affiche tel quel sur les blocs de contact de votre site web. Il n'influence pas la position de la carte ci-dessous.
+            </p>
+          </div>
 
-          {/* 2. The map to get the place */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-ink flex items-center gap-1.5">
+          {/* 2. Interactive map to set school location */}
+          <div className="space-y-2 pt-2 border-t border-line/40">
+            <div>
+              <h4 className="text-xs font-bold text-ink flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-brand-600" />
-                Carte de l'emplacement :
-              </span>
-              {currentAddress?.trim() && (
-                <a
-                  href={`https://maps.google.com/?q=${encodeURIComponent(currentAddress.trim())}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-brand-600 hover:text-brand-700 flex items-center gap-1 font-medium"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  Ouvrir sur Google Maps
-                </a>
-              )}
+                2. Emplacement de l'école sur la carte (Indépendant du texte)
+              </h4>
+              <p className="text-[11px] text-muted mt-0.5">
+                Positionnez le repère exactement là où se trouve votre école. C'est cet emplacement qui s'affiche sur la carte de la page d'accueil.
+              </p>
             </div>
 
-            {mapEmbedSource ? (
-              <div className="rounded-xl overflow-hidden border border-line shadow-xs bg-slate-50 relative aspect-[16/8] max-h-[300px] w-full">
-                <iframe
-                  title="Carte de l'école"
-                  src={mapEmbedSource}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="w-full h-full"
-                />
-              </div>
-            ) : (
-              <div className="border border-dashed border-line rounded-xl p-8 text-center bg-surface/50 text-muted">
-                <MapPin className="w-8 h-8 text-muted/60 mx-auto mb-2" />
-                <p className="text-xs font-medium">Saisissez une adresse ci-dessus pour afficher la carte de l'école.</p>
-              </div>
-            )}
+            <SchoolMapPicker
+              latitude={watchedLat}
+              longitude={watchedLng}
+              zoom={watchedZoom}
+              onChange={({ latitude, longitude, zoom }) => {
+                setValue('mapLatitude', latitude, { shouldDirty: true });
+                setValue('mapLongitude', longitude, { shouldDirty: true });
+                if (zoom) setValue('mapZoom', zoom, { shouldDirty: true });
+              }}
+            />
           </div>
         </div>
       </div>
@@ -504,7 +521,7 @@ export const SiteSettingsTab: React.FC = () => {
                   type="button"
                   variant="ghost"
                   onClick={() => remove(index)}
-                  className="h-10 w-10 p-0 text-muted hover:text-rose-600 hover:bg-rose-50 rounded-xl shrink-0 self-end sm:self-center"
+                  className="h-10 w-10 p-0 text-muted hover:text-rose-600 hover:bg-rose-50 rounded-xl shrink-0 self-end sm:center"
                   title="Supprimer ce réseau"
                 >
                   <Trash2 className="w-4 h-4" />

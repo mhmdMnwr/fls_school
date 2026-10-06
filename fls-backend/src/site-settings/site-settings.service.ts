@@ -33,6 +33,21 @@ export class SiteSettingsService {
     }
     delete updateData.tagline;
 
+    if (
+      updateData.mapLatitude !== undefined &&
+      updateData.mapLongitude !== undefined &&
+      !isNaN(updateData.mapLatitude) &&
+      !isNaN(updateData.mapLongitude)
+    ) {
+      const zoom = updateData.mapZoom || 15;
+      if (!updateData.googleMapsEmbedUrl) {
+        updateData.googleMapsEmbedUrl = `https://maps.google.com/maps?q=${updateData.mapLatitude},${updateData.mapLongitude}&z=${zoom}&output=embed`;
+      }
+      if (!updateData.mapsUrl) {
+        updateData.mapsUrl = `https://www.google.com/maps?q=${updateData.mapLatitude},${updateData.mapLongitude}`;
+      }
+    }
+
     const updated = await this.siteSettingsModel
       .findOneAndUpdate(
         { key: 'main' },
