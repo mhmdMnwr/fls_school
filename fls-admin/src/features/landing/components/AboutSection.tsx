@@ -23,8 +23,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ settings }) => {
     "Nos équipes pédagogiques expérimentées appliquent des méthodes innovantes favorisant l'autonomie, la curiosité et l'épanouissement scolaire de nos élèves.";
 
   return (
-    <section id="a-propos" className="py-16 sm:py-20 bg-white border-b border-slate-100 scroll-mt-16">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+    <section id="a-propos" className="py-16 sm:py-20 bg-white border-b border-slate-100 scroll-mt-16 overflow-x-hidden w-full max-w-full">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 min-w-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           {/* Column 1: School Building Photo as in reference */}
           <div className="lg:col-span-4">
@@ -54,35 +54,35 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ settings }) => {
             </div>
 
             {/* 3 bullet features matching reference: icons in circles */}
-            <div className="grid grid-cols-3 gap-3 pt-3 border-t border-slate-100">
-              <div className="space-y-1.5 text-center sm:text-left">
-                <div className="w-9 h-9 rounded-full bg-[#0B2545] text-white flex items-center justify-center mx-auto sm:mx-0 shadow-sm">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-3 border-t border-slate-100">
+              <div className="space-y-1.5 text-center sm:text-left min-w-0">
+                <div className="w-9 h-9 rounded-full bg-[#0B2545] text-white flex items-center justify-center mx-auto sm:mx-0 shadow-sm shrink-0">
                   <GraduationCap className="w-4 h-4 text-[#F5A623]" />
                 </div>
-                <div className="text-xs font-bold text-[#0B2545] leading-tight">
+                <div className="text-[11px] sm:text-xs font-bold text-[#0B2545] leading-tight break-words">
                   Un enseignement
                 </div>
-                <div className="text-[11px] text-slate-500">de qualité</div>
+                <div className="text-[10px] sm:text-[11px] text-slate-500">de qualité</div>
               </div>
 
-              <div className="space-y-1.5 text-center sm:text-left">
-                <div className="w-9 h-9 rounded-full bg-[#0B2545] text-white flex items-center justify-center mx-auto sm:mx-0 shadow-sm">
+              <div className="space-y-1.5 text-center sm:text-left min-w-0">
+                <div className="w-9 h-9 rounded-full bg-[#0B2545] text-white flex items-center justify-center mx-auto sm:mx-0 shadow-sm shrink-0">
                   <Users className="w-4 h-4 text-[#F5A623]" />
                 </div>
-                <div className="text-xs font-bold text-[#0B2545] leading-tight">
+                <div className="text-[11px] sm:text-xs font-bold text-[#0B2545] leading-tight break-words">
                   Un encadrement
                 </div>
-                <div className="text-[11px] text-slate-500">bienveillant</div>
+                <div className="text-[10px] sm:text-[11px] text-slate-500">bienveillant</div>
               </div>
 
-              <div className="space-y-1.5 text-center sm:text-left">
-                <div className="w-9 h-9 rounded-full bg-[#0B2545] text-white flex items-center justify-center mx-auto sm:mx-0 shadow-sm">
+              <div className="space-y-1.5 text-center sm:text-left min-w-0">
+                <div className="w-9 h-9 rounded-full bg-[#0B2545] text-white flex items-center justify-center mx-auto sm:mx-0 shadow-sm shrink-0">
                   <Star className="w-4 h-4 text-[#F5A623]" />
                 </div>
-                <div className="text-xs font-bold text-[#0B2545] leading-tight">
+                <div className="text-[11px] sm:text-xs font-bold text-[#0B2545] leading-tight break-words">
                   Des résultats
                 </div>
-                <div className="text-[11px] text-slate-500">concrets</div>
+                <div className="text-[10px] sm:text-[11px] text-slate-500">concrets</div>
               </div>
             </div>
           </div>

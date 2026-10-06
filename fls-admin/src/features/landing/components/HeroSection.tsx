@@ -29,9 +29,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, siteInfo }) 
   return (
     <section
       id="hero"
-      className="bg-[#0B2545] text-white py-14 lg:py-18 scroll-mt-20 relative overflow-hidden"
+      className="bg-[#0B2545] text-white py-14 lg:py-18 scroll-mt-20 relative overflow-hidden w-full max-w-full"
     >
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 min-w-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Heading, Tagline, Buttons & Numbers */}
           <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
@@ -77,33 +77,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, siteInfo }) 
 
             {/* The Numbers directly under the two buttons */}
             <div className="pt-6 border-t border-white/15">
-              <div className="grid grid-cols-4 gap-4 max-w-lg mx-auto lg:mx-0">
-                <div className="text-center lg:text-left">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-lg mx-auto lg:mx-0">
+                <div className="text-center lg:text-left bg-white/5 lg:bg-transparent p-2.5 lg:p-0 rounded-xl">
                   <div className="text-2xl sm:text-3xl font-black text-[#F5A623] leading-none">
                     {siteInfo?.levelsCount ?? (siteInfo as any)?.levels ?? 4}
                   </div>
                   <div className="text-xs text-slate-300 font-semibold mt-1">Niveaux</div>
                 </div>
 
-                <div className="text-center lg:text-left">
+                <div className="text-center lg:text-left bg-white/5 lg:bg-transparent p-2.5 lg:p-0 rounded-xl">
                   <div className="text-2xl sm:text-3xl font-black text-[#F5A623] leading-none">
                     {siteInfo?.classesCount ?? (siteInfo as any)?.classes ?? 7}
                   </div>
                   <div className="text-xs text-slate-300 font-semibold mt-1">Classes</div>
                 </div>
 
-                <div className="text-center lg:text-left">
+                <div className="text-center lg:text-left bg-white/5 lg:bg-transparent p-2.5 lg:p-0 rounded-xl">
                   <div className="text-2xl sm:text-3xl font-black text-[#F5A623] leading-none">
                     {siteInfo?.subjectsCount ?? (siteInfo as any)?.subjects ?? 27}
                   </div>
                   <div className="text-xs text-slate-300 font-semibold mt-1">Matières</div>
                 </div>
 
-                <div className="text-center lg:text-left">
+                <div className="text-center lg:text-left bg-white/5 lg:bg-transparent p-2.5 lg:p-0 rounded-xl">
                   <div className="text-2xl sm:text-3xl font-black text-[#F5A623] leading-none">
                     {siteInfo?.teachersCount ?? (siteInfo as any)?.teachers ?? 4}
                   </div>
-                  <div className="text-xs text-slate-300 font-semibold mt-1">Professeurs</div>
+                  <div className="text-xs text-slate-300 font-semibold mt-1 truncate">Professeurs</div>
                 </div>
               </div>
             </div>

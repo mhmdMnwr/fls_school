@@ -15,10 +15,10 @@ export default function ParentLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-page-bg text-body flex flex-col">
+    <div className="min-h-screen bg-page-bg text-body flex flex-col overflow-x-hidden w-full max-w-full">
       {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-gradient-to-r from-[#312E81] to-[#4338CA] text-white shadow-md">
-        <div className="max-w-5xl mx-auto px-4 md:px-6 py-3.5 flex items-center justify-between">
+      <header className="sticky top-0 z-30 bg-gradient-to-r from-[#312E81] to-[#4338CA] text-white shadow-md w-full max-w-full">
+        <div className="max-w-5xl mx-auto px-4 md:px-6 py-3.5 flex items-center justify-between min-w-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md p-1 border border-white/20">
               <img
@@ -54,7 +54,7 @@ export default function ParentLayout() {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 md:px-6 py-6">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 md:px-6 py-6 min-w-0">
         <Outlet />
       </main>
 

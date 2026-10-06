@@ -52,10 +52,10 @@ export const LandingPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-page-bg text-ink selection:bg-brand-500/20 font-sans antialiased">
+    <div className="min-h-screen flex flex-col bg-page-bg text-ink selection:bg-brand-500/20 font-sans antialiased overflow-x-hidden w-full max-w-full">
       <LandingHeader settings={settings} />
 
-      <main className="flex-1">
+      <main className="flex-1 overflow-x-hidden w-full max-w-full">
         <HeroSection settings={settings} siteInfo={siteInfo} />
         <AboutSection settings={settings} />
         <TeachersSection teachers={teachers} />

@@ -75,8 +75,8 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({ settings }) => {
       : undefined);
 
   return (
-    <footer id="contact" className="bg-[#0B2545] text-white pt-14 pb-8 border-t border-white/10 scroll-mt-10">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+    <footer id="contact" className="bg-[#0B2545] text-white pt-14 pb-8 border-t border-white/10 scroll-mt-10 overflow-x-hidden w-full max-w-full">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 min-w-0">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-12 border-b border-white/15">
           {/* Col 1: Brand & Slogan (lg:col-span-4) */}
           <div className="lg:col-span-4 space-y-4">
@@ -218,11 +218,11 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({ settings }) => {
               )}
 
               {settings?.email && (
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <Mail className="w-4 h-4 text-[#F5A623] shrink-0" />
                   <a
                     href={`mailto:${settings.email}`}
-                    className="hover:text-white transition-colors truncate"
+                    className="hover:text-white transition-colors truncate min-w-0"
                   >
                     {settings.email}
                   </a>
@@ -313,7 +313,7 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({ settings }) => {
         </div>
 
         {/* Bottom bar with developer credit */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 text-center sm:text-left">
           <p>&copy; {currentYear} {APP_NAME}. Tous droits réservés.</p>
 
           <p className="text-center font-medium">
@@ -328,7 +328,7 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({ settings }) => {
             </a>
           </p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             <a href="#hero" className="hover:text-white transition-colors">
               Mentions légales
             </a>

@@ -7,14 +7,14 @@ export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-page-bg text-body flex">
+    <div className="min-h-screen bg-page-bg text-body flex overflow-x-hidden w-full max-w-full">
       {/* Sidebar (Desktop fixed + Mobile drawer) */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main content wrapper */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-64 overflow-x-hidden w-full max-w-full">
         <Topbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        <main className="flex-1 max-w-[1400px] w-full mx-auto px-4 md:px-6 lg:px-8 py-6">
+        <main className="flex-1 max-w-[1400px] w-full mx-auto px-4 md:px-6 lg:px-8 py-6 min-w-0">
           <Outlet />
         </main>
       </div>

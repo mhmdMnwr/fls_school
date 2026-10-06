@@ -50,25 +50,25 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ settings }) => {
           isScrolled ? 'shadow-md shadow-slate-200/50' : ''
         }`}
       >
-        <div className="max-w-[1280px] h-full mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
+        <div className="max-w-[1280px] h-full mx-auto px-4 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 min-w-0">
           {/* Logo & School Name */}
           <a
             href="#hero"
             onClick={(e) => scrollToSection(e, '#hero')}
-            className="flex items-center gap-3 shrink-0 group"
+            className="flex items-center gap-2.5 sm:gap-3 min-w-0 group"
           >
-            <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden group-hover:scale-105 transition-transform duration-200 p-1">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden group-hover:scale-105 transition-transform duration-200 p-1 shrink-0">
               <img
                 src="/images/fls-logo.png"
                 alt="FLS School Logo"
                 className="w-full h-full object-contain"
               />
             </div>
-            <div>
-              <span className="text-xl font-black text-[#0B2545] leading-tight block tracking-tight">
+            <div className="min-w-0">
+              <span className="text-lg sm:text-xl font-black text-[#0B2545] leading-tight block tracking-tight">
                 {APP_NAME}
               </span>
-              <span className="text-[11px] text-slate-500 font-bold block">
+              <span className="text-[11px] text-slate-500 font-bold hidden sm:block truncate">
                 Apprendre aujourd'hui, réussir demain
               </span>
             </div>
@@ -89,11 +89,11 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ settings }) => {
           </nav>
 
           {/* Right Action: Inscription Button Only */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <a
               href="#inscription"
               onClick={(e) => scrollToSection(e, '#inscription')}
-              className="inline-flex items-center gap-2 text-xs font-bold px-5 py-2.5 rounded-full bg-[#0B2545] hover:bg-[#13335A] text-white shadow-md transition-all hover:scale-105"
+              className="inline-flex items-center gap-1.5 sm:gap-2 text-xs font-bold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#0B2545] hover:bg-[#13335A] text-white shadow-md transition-all hover:scale-105"
             >
               <UserPlus className="w-3.5 h-3.5 text-[#F5A623]" />
               <span>Inscription</span>
